@@ -1,6 +1,6 @@
 namespace OfflineSubtitleTranslator.Services;
 
-public sealed class LocalTranslationClient(string python, TranslatorPlan plan) : WorkerProcess(python), ITextTranslator
+public sealed class LocalTranslationClient(string python, TranslatorPlan plan) : WorkerProcess(python), ITextTranslator, ITranslationContext
 {
     public TranslatorPlan Plan { get; } = plan;
     protected override string Name => "本地翻译进程";

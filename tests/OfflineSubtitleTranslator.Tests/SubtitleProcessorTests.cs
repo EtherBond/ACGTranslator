@@ -16,13 +16,24 @@ public class SubtitleProcessorTests
         public Task<AsrResult> RecognizeAsync(float[] samples, CancellationToken cancellationToken = default) => recognize(samples);
     }
 
-    private sealed class FakeTranslator(Func<string, Task<string>> translate) : ITextTranslator
+    private class FakeTranslator(Func<string, Task<string>> translate) : ITextTranslator
     {
         public ConcurrentQueue<string> Calls { get; } = new();
         public Task<string> TranslateAsync(string text, string sourceLanguage, CancellationToken cancellationToken = default)
         {
             Calls.Enqueue(text);
             return translate(text);
+        }
+    }
+
+    private sealed class ContextTranslator : FakeTranslator, ITranslationContext
+    {
+        public int Resets { get; private set; }
+        public ContextTranslator() : base(Task.FromResult) { }
+        public Task ResetContextAsync(CancellationToken cancellationToken = default)
+        {
+            Resets++;
+            return Task.CompletedTask;
         }
     }
 
@@ -115,5 +126,20 @@ public class SubtitleProcessorTests
 
         Assert.Equal(2, processor.Dropped);
         Assert.Equal(["text1", "text4", "text5"], completed);
+    }
+
+    [Fact]
+    public async Task Translation_context_is_reset_between_sessions()
+    {
+        var translator = new ContextTranslator();
+        var processor = new SubtitleProcessor(new FakeRecognizer(s => Task.FromResult(Result(s))), translator);
+        var first = new SessionInfo(Guid.NewGuid(), "第一段");
+        var second = new SessionInfo(Guid.NewGuid(), "第二段");
+
+        processor.Enqueue(Segment(1), first);
+        processor.Enqueue(Segment(2), second);
+        await processor.DisposeAsync();
+
+        Assert.Equal(2, translator.Resets);
     }
 }

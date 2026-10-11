@@ -26,6 +26,7 @@ public sealed class SubtitleProcessor : IAsyncDisposable
         new BoundedChannelOptions(DefaultBacklog) { FullMode = BoundedChannelFullMode.Wait, SingleReader = true, SingleWriter = true });
     private readonly CancellationTokenSource _stop = new();
     private readonly Task _recognizing, _translating;
+    private Guid? _translationSession;
     private int _dropped;
 
     public SubtitleProcessor(ISpeechRecognizer recognizer, ITextTranslator translator, int backlog = DefaultBacklog)
@@ -87,6 +88,12 @@ public sealed class SubtitleProcessor : IAsyncDisposable
         {
             try
             {
+                if (_translationSession != entry.SessionId)
+                {
+                    if (_translator is ITranslationContext context)
+                        await context.ResetContextAsync(_stop.Token);
+                    _translationSession = entry.SessionId;
+                }
                 if (IsChinese(entry.SourceLanguage)) entry.ChineseText = entry.SourceText;
                 else if (IsTranslatable(entry.SourceLanguage)) entry.ChineseText = await _translator.TranslateAsync(entry.SourceText, entry.SourceLanguage, _stop.Token);
                 entry.Status = string.IsNullOrWhiteSpace(entry.ChineseText) ? "未翻译" : "完成";

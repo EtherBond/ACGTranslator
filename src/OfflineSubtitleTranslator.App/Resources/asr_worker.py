@@ -6,16 +6,23 @@ from worker_protocol import add_dll_directories, emit, requests
 # Only these languages have translation support.
 SUPPORTED_LANGUAGES = ("ja", "en")
 SAMPLE_RATE = 16000
+AUTO_LANGUAGE_MIN_PROBABILITY = 0.35
 
 
 def transcribe(model, audio, language, options):
     forced = language if language in SUPPORTED_LANGUAGES else None
     segments, info = model.transcribe(audio, language=forced, **options)
     if forced is None and info.language not in SUPPORTED_LANGUAGES:
-        # Re-decode with the more likely supported language instead of producing untranslatable text.
+        # Only retry when the model has meaningful evidence for one of the two
+        # supported languages. For music/noise, returning an empty result is
+        # safer than forcing Japanese and displaying hallucinated subtitles.
         probabilities = dict(info.all_language_probs or [])
-        forced = max(SUPPORTED_LANGUAGES, key=lambda code: probabilities.get(code, 0.0))
-        segments, info = model.transcribe(audio, language=forced, **options)
+        candidate = max(SUPPORTED_LANGUAGES, key=lambda code: probabilities.get(code, 0.0))
+        if probabilities.get(candidate, 0.0) >= AUTO_LANGUAGE_MIN_PROBABILITY:
+            forced = candidate
+            segments, info = model.transcribe(audio, language=forced, **options)
+        else:
+            return {"language": info.language, "text": "", "start": 0.0, "end": len(audio) / SAMPLE_RATE}
     parts, start, end = [], None, None
     for segment in segments:
         if not segment.text.strip():
@@ -51,6 +58,15 @@ def main():
         "vad_filter": True,
         "condition_on_previous_text": False,
         "beam_size": args.beam_size or (5 if args.device == "cuda" else 2),
+        "temperature": 0.0,
+        "compression_ratio_threshold": 2.4,
+        "log_prob_threshold": -1.0,
+        "no_speech_threshold": 0.55,
+        "vad_parameters": {
+            "min_speech_duration_ms": 250,
+            "min_silence_duration_ms": 320,
+            "speech_pad_ms": 120,
+        },
     }
     try:
         model = WhisperModel(args.model, device=args.device, compute_type=compute_type)
