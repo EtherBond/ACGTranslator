@@ -1,0 +1,78 @@
+[
+ {
+  "model": "whisper-large-v3-turbo (cuda)",
+  "load_seconds": 2.8,
+  "ja": {
+   "cer": 0.033,
+   "median_seconds": 0.389,
+   "rows": [
+    {
+     "reference": "ねえ、昨日のこと覚えてる？",
+     "text": "ねえ、昨日のことを覚えてる。",
+     "language": "ja",
+     "wrong_language": false
+    },
+    {
+     "reference": "でもさ、結局は先輩のおかげで助かったんだよね。",
+     "text": "でもさ、結局は先輩のおかげで助かったんだよね。",
+     "language": "ja",
+     "wrong_language": false
+    },
+    {
+     "reference": "諦めるのはまだ早い。最後まで戦うんだ。",
+     "text": "諦めるのはまだ早い。最後まで戦うんだ。",
+     "language": "ja",
+     "wrong_language": false
+    },
+    {
+     "reference": "政府は来年度から新たな少子化対策を実施すると発表しました。",
+     "text": "政府は来年度から新たな少子化対策を実施すると発表しました。",
+     "language": "ja",
+     "wrong_language": false
+    },
+    {
+     "reference": "東京都内では今日、最高気温が三十五度を超える猛暑日となりました。",
+     "text": "東京都内では今日、最高気温が35度を超える猛暑日となりました。",
+     "language": "ja",
+     "wrong_language": false
+    },
+    {
+     "reference": "えっ、もう？まだ来たばかりじゃん。",
+     "text": "えっ、もう。まだ来たばかりじゃん。",
+     "language": "ja",
+     "wrong_language": false
+    }
+   ]
+  },
+  "en": {
+   "cer": 0.0,
+   "median_seconds": 0.358,
+   "rows": [
+    {
+     "reference": "Hey, are you coming to the party tonight?",
+     "text": "Hey, are you coming to the party tonight?",
+     "language": "en",
+     "wrong_language": false
+    },
+    {
+     "reference": "I don't know, I've got a ton of work to catch up on.",
+     "text": "I don't know, I've got a ton of work to catch up on.",
+     "language": "en",
+     "wrong_language": false
+    },
+    {
+     "reference": "We're running out of time. The whole city is counting on us.",
+     "text": "We're running out of time. The whole city is counting on us.",
+     "language": "en",
+     "wrong_language": false
+    },
+    {
+     "reference": "The central bank decided to keep interest rates unchanged for the third consecutive month.",
+     "text": "The central bank decided to keep interest rates unchanged for the third consecutive month.",
+     "language": "en",
+     "wrong_language": false
+    }
+   ]
+  }
+ }
+]

@@ -1,0 +1,40 @@
+<Window x:Class="OfflineSubtitleTranslator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="离线实时翻译" Width="720" Height="220" MinWidth="360" MinHeight="150"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ShowInTaskbar="True" Topmost="True" ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Border x:Name="RootBorder" CornerRadius="12" Background="#E91B1B1F" BorderBrush="#555A5A64" BorderThickness="1" Padding="14" MouseLeftButtonDown="RootBorder_MouseLeftButtonDown">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0">
+                <TextBlock Text="离线实时翻译" Foreground="#FFD0D0D8" FontSize="12" VerticalAlignment="Center" />
+                <ProgressBar x:Name="LevelBar" DockPanel.Dock="Right" Width="60" Height="4" Maximum="100" Margin="8,0,0,0"
+                             Background="#33FFFFFF" Foreground="#FF9AD4FF" BorderThickness="0" VerticalAlignment="Center"
+                             AutomationProperties.Name="输入音量" />
+                <TextBlock x:Name="StatusText" Text="未开始" Foreground="#FF9AD4FF" FontSize="12" HorizontalAlignment="Right" DockPanel.Dock="Right" VerticalAlignment="Center"
+                           AutomationProperties.LiveSetting="Polite" />
+            </DockPanel>
+            <StackPanel Grid.Row="1" Margin="0,8,0,8" VerticalAlignment="Bottom">
+                <TextBlock x:Name="SourceTextBlock" Text="等待音频采集…" Foreground="#FFB5B5BE" FontSize="17" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="55" />
+                <TextBlock x:Name="ChineseTextBlock" Text="点击“开始识别”捕获电脑正在播放的声音" Foreground="White" FontSize="26" FontWeight="SemiBold" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="75"
+                           AutomationProperties.LiveSetting="Polite" />
+            </StackPanel>
+            <TextBlock x:Name="ErrorText" Grid.Row="2" Visibility="Collapsed" Foreground="#FFFFB4A8" FontSize="12" TextTrimming="CharacterEllipsis"
+                       Cursor="Hand" MouseLeftButtonUp="ErrorText_MouseLeftButtonUp" Margin="4,0,4,4" />
+            <DockPanel Grid.Row="3">
+                <Button x:Name="StartButton" Content="开始识别" Click="StartButton_Click" />
+                <Button Content="测试字幕" Click="TestButton_Click" ToolTip="预览字幕样式，不写入历史" />
+                <Button Content="历史管理" Click="HistoryButton_Click" />
+                <Button x:Name="SettingsButton" Content="设置" Click="SettingsButton_Click" />
+                <Button Content="×" Width="34" Click="CloseButton_Click" HorizontalAlignment="Right" DockPanel.Dock="Right" AutomationProperties.Name="关闭" />
+            </DockPanel>
+        </Grid>
+    </Border>
+</Window>

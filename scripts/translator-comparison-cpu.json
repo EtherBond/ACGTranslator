@@ -1,0 +1,602 @@
+[
+ {
+  "engine": "argos (cpu)",
+  "load_seconds": 6.0,
+  "median_seconds": 0.084,
+  "max_seconds": 0.166,
+  "scenes": [
+   {
+    "language": "ja",
+    "title": "日常对话",
+    "lines": [
+     {
+      "source": "ねえ、昨日のこと覚えてる？",
+      "translation": "你还记得昨天吗?",
+      "seconds": 0.084
+     },
+     {
+      "source": "うん、まさかあんなことになるとは思わなかったよ。",
+      "translation": "我觉得这不会很烦人。",
+      "seconds": 0.151
+     },
+     {
+      "source": "でもさ、結局は先輩のおかげで助かったんだよね。",
+      "translation": "然而,毕竟,这是对老年人的帮助。",
+      "seconds": 0.143
+     },
+     {
+      "source": "今度ちゃんとお礼言わなきゃ。",
+      "translation": "我必须再次感谢你。",
+      "seconds": 0.099
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "动画台词",
+    "lines": [
+     {
+      "source": "お前なんかに負けるわけねえだろ！",
+      "translation": "你会失去它!",
+      "seconds": 0.077
+     },
+     {
+      "source": "諦めるのはまだ早い。最後まで戦うんだ。",
+      "translation": "现在放弃还为时过早。 我战斗到最后。",
+      "seconds": 0.128
+     },
+     {
+      "source": "この力…まさか、封印が解けたのか？",
+      "translation": "这种力量... 密封了吗?",
+      "seconds": 0.101
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "新闻",
+    "lines": [
+     {
+      "source": "政府は来年度から新たな少子化対策を実施すると発表しました。",
+      "translation": "政府宣布从明年起将执行新的解密措施。",
+      "seconds": 0.166
+     },
+     {
+      "source": "東京都内では今日、最高気温が三十五度を超える猛暑日となりました。",
+      "translation": "今天,温度超过30摄氏度。",
+      "seconds": 0.12
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "省略主语",
+    "lines": [
+     {
+      "source": "もう行かなきゃ。",
+      "translation": "我必须这样做。",
+      "seconds": 0.065
+     },
+     {
+      "source": "えっ、もう？まだ来たばかりじゃん。",
+      "translation": "是吗? 我刚刚到",
+      "seconds": 0.085
+     },
+     {
+      "source": "ごめん、明日早いんだ。",
+      "translation": "对不起,明天很早",
+      "seconds": 0.083
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "日常对话",
+    "lines": [
+     {
+      "source": "Hey, are you coming to the party tonight?",
+      "translation": "嘿,你今晚来参加派对吗?",
+      "seconds": 0.058
+     },
+     {
+      "source": "I don't know, I've got a ton of work to catch up on.",
+      "translation": "我不知道,我还有好多工作要做",
+      "seconds": 0.052
+     },
+     {
+      "source": "Come on, it's Friday. You can't be serious.",
+      "translation": "来,今天是星期五 你不可能是认真的。",
+      "seconds": 0.061
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "影视台词",
+    "lines": [
+     {
+      "source": "We're running out of time. The whole city is counting on us.",
+      "translation": "我们没时间了 整个城市都指望着我们",
+      "seconds": 0.06
+     },
+     {
+      "source": "I never asked for any of this.",
+      "translation": "我从来没有要求任何这一切。",
+      "seconds": 0.041
+     },
+     {
+      "source": "Whatever happens, don't look back.",
+      "translation": "无论发生什么,不要回头看。",
+      "seconds": 0.05
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "新闻/讲解",
+    "lines": [
+     {
+      "source": "The central bank decided to keep interest rates unchanged for the third consecutive month.",
+      "translation": "中央银行决定连续三个月保持利率不变.",
+      "seconds": 0.065
+     },
+     {
+      "source": "In this video, we'll walk through how to set up the development environment step by step.",
+      "translation": "在这段视频中,我们将走过如何一步一步地建立开发环境.",
+      "seconds": 0.097
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "engine": "nllb-600m (cpu)",
+  "load_seconds": 2.0,
+  "median_seconds": 0.478,
+  "max_seconds": 0.76,
+  "scenes": [
+   {
+    "language": "ja",
+    "title": "日常对话",
+    "lines": [
+     {
+      "source": "ねえ、昨日のこと覚えてる？",
+      "translation": "你还记得昨天?",
+      "seconds": 0.359
+     },
+     {
+      "source": "うん、まさかあんなことになるとは思わなかったよ。",
+      "translation": "我没想到会发生这样的事情.",
+      "seconds": 0.394
+     },
+     {
+      "source": "でもさ、結局は先輩のおかげで助かったんだよね。",
+      "translation": "但事实上,我们最终得到了帮助.",
+      "seconds": 0.572
+     },
+     {
+      "source": "今度ちゃんとお礼言わなきゃ。",
+      "translation": "现在我必须感谢你.",
+      "seconds": 0.36
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "动画台词",
+    "lines": [
+     {
+      "source": "お前なんかに負けるわけねえだろ！",
+      "translation": "你不会输任何东西!",
+      "seconds": 0.298
+     },
+     {
+      "source": "諦めるのはまだ早い。最後まで戦うんだ。",
+      "translation": "现在还很早放弃.",
+      "seconds": 0.631
+     },
+     {
+      "source": "この力…まさか、封印が解けたのか？",
+      "translation": "这种力量... 封锁破了吗?",
+      "seconds": 0.483
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "新闻",
+    "lines": [
+     {
+      "source": "政府は来年度から新たな少子化対策を実施すると発表しました。",
+      "translation": "政府宣布将从明年开始采取新的措施.",
+      "seconds": 0.534
+     },
+     {
+      "source": "東京都内では今日、最高気温が三十五度を超える猛暑日となりました。",
+      "translation": "在东京,今天的最高气温超过35摄氏度.",
+      "seconds": 0.674
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "省略主语",
+    "lines": [
+     {
+      "source": "もう行かなきゃ。",
+      "translation": "我必须走.",
+      "seconds": 0.28
+     },
+     {
+      "source": "えっ、もう？まだ来たばかりじゃん。",
+      "translation": "⁇ ,我还没有来过.",
+      "seconds": 0.387
+     },
+     {
+      "source": "ごめん、明日早いんだ。",
+      "translation": "我很抱歉,明天早些时候.",
+      "seconds": 0.474
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "日常对话",
+    "lines": [
+     {
+      "source": "Hey, are you coming to the party tonight?",
+      "translation": "你今晚会来聚会吗?",
+      "seconds": 0.459
+     },
+     {
+      "source": "I don't know, I've got a ton of work to catch up on.",
+      "translation": "我不知道,我有很多工作要赶上.",
+      "seconds": 0.487
+     },
+     {
+      "source": "Come on, it's Friday. You can't be serious.",
+      "translation": "现在是星期五,你不能说真的.",
+      "seconds": 0.502
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "影视台词",
+    "lines": [
+     {
+      "source": "We're running out of time. The whole city is counting on us.",
+      "translation": "我们没有时间,整个城市都依靠我们.",
+      "seconds": 0.579
+     },
+     {
+      "source": "I never asked for any of this.",
+      "translation": "我从来没有要求过.",
+      "seconds": 0.39
+     },
+     {
+      "source": "Whatever happens, don't look back.",
+      "translation": "无论发生什么,不要回头看.",
+      "seconds": 0.473
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "新闻/讲解",
+    "lines": [
+     {
+      "source": "The central bank decided to keep interest rates unchanged for the third consecutive month.",
+      "translation": "中央银行决定连续第三个月保持利率不变.",
+      "seconds": 0.66
+     },
+     {
+      "source": "In this video, we'll walk through how to set up the development environment step by step.",
+      "translation": "在这段视频中,我们将一步步介绍如何设置开发环境.",
+      "seconds": 0.76
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "engine": "hymt2-1.8b (cpu)",
+  "load_seconds": 3.2,
+  "median_seconds": 0.824,
+  "max_seconds": 5.01,
+  "scenes": [
+   {
+    "language": "ja",
+    "title": "日常对话",
+    "lines": [
+     {
+      "source": "ねえ、昨日のこと覚えてる？",
+      "translation": "喂，你还记得昨天发生的事情吗？",
+      "seconds": 0.596
+     },
+     {
+      "source": "うん、まさかあんなことになるとは思わなかったよ。",
+      "translation": "嗯，真没想到会发展成那样。",
+      "seconds": 5.01
+     },
+     {
+      "source": "でもさ、結局は先輩のおかげで助かったんだよね。",
+      "translation": "不过，最终还是多亏了前辈的帮忙才得以幸免于难啊。",
+      "seconds": 1.246
+     },
+     {
+      "source": "今度ちゃんとお礼言わなきゃ。",
+      "translation": "这次得好好道谢才行。",
+      "seconds": 0.617
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "动画台词",
+    "lines": [
+     {
+      "source": "お前なんかに負けるわけねえだろ！",
+      "translation": "我可不会输给像你这样的家伙啊！",
+      "seconds": 0.768
+     },
+     {
+      "source": "諦めるのはまだ早い。最後まで戦うんだ。",
+      "translation": "放弃还为时过早。要战斗到最后一刻。",
+      "seconds": 0.843
+     },
+     {
+      "source": "この力…まさか、封印が解けたのか？",
+      "translation": "这股力量……难道，封印解开了吗？",
+      "seconds": 0.907
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "新闻",
+    "lines": [
+     {
+      "source": "政府は来年度から新たな少子化対策を実施すると発表しました。",
+      "translation": "政府宣布，从下一年开始实施新的生育政策。",
+      "seconds": 0.838
+     },
+     {
+      "source": "東京都内では今日、最高気温が三十五度を超える猛暑日となりました。",
+      "translation": "今天，东京都内的最高气温超过了35度，出现了酷热天气。",
+      "seconds": 1.142
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "省略主语",
+    "lines": [
+     {
+      "source": "もう行かなきゃ。",
+      "translation": "我得赶紧离开了。",
+      "seconds": 0.409
+     },
+     {
+      "source": "えっ、もう？まだ来たばかりじゃん。",
+      "translation": "啊，已经了吗？我才刚来不久呢。",
+      "seconds": 0.831
+     },
+     {
+      "source": "ごめん、明日早いんだ。",
+      "translation": "对不起，明天很早。",
+      "seconds": 0.564
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "日常对话",
+    "lines": [
+     {
+      "source": "Hey, are you coming to the party tonight?",
+      "translation": "嘿，你今晚会来参加派对吗？",
+      "seconds": 0.794
+     },
+     {
+      "source": "I don't know, I've got a ton of work to catch up on.",
+      "translation": "我不知道，我有很多工作需要赶工完成。",
+      "seconds": 0.775
+     },
+     {
+      "source": "Come on, it's Friday. You can't be serious.",
+      "translation": "拜托，今天是星期五。你不会是认真的吧。",
+      "seconds": 0.918
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "影视台词",
+    "lines": [
+     {
+      "source": "We're running out of time. The whole city is counting on us.",
+      "translation": "我们的时间已经不多了。整个城市都依赖于我们。",
+      "seconds": 0.816
+     },
+     {
+      "source": "I never asked for any of this.",
+      "translation": "我从未要求过这些。",
+      "seconds": 0.558
+     },
+     {
+      "source": "Whatever happens, don't look back.",
+      "translation": "无论发生什么，都不要回头。",
+      "seconds": 1.022
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "新闻/讲解",
+    "lines": [
+     {
+      "source": "The central bank decided to keep interest rates unchanged for the third consecutive month.",
+      "translation": "中央银行决定连续第三个月保持利率不变。",
+      "seconds": 0.638
+     },
+     {
+      "source": "In this video, we'll walk through how to set up the development environment step by step.",
+      "translation": "在这段视频中，我们将逐步介绍如何设置开发环境。",
+      "seconds": 0.949
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "engine": "hymt2-7b (cpu)",
+  "load_seconds": 5.9,
+  "median_seconds": 2.606,
+  "max_seconds": 4.373,
+  "scenes": [
+   {
+    "language": "ja",
+    "title": "日常对话",
+    "lines": [
+     {
+      "source": "ねえ、昨日のこと覚えてる？",
+      "translation": "喂，还记得昨天的事吗？",
+      "seconds": 1.596
+     },
+     {
+      "source": "うん、まさかあんなことになるとは思わなかったよ。",
+      "translation": "嗯，真没想到会变成那样。",
+      "seconds": 4.272
+     },
+     {
+      "source": "でもさ、結局は先輩のおかげで助かったんだよね。",
+      "translation": "不过啊，说到底还是多亏了学长，我们才得救的吧。",
+      "seconds": 4.298
+     },
+     {
+      "source": "今度ちゃんとお礼言わなきゃ。",
+      "translation": "下次一定要好好道谢才行。",
+      "seconds": 1.91
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "动画台词",
+    "lines": [
+     {
+      "source": "お前なんかに負けるわけねえだろ！",
+      "translation": "我怎么可能输给这种人！",
+      "seconds": 1.734
+     },
+     {
+      "source": "諦めるのはまだ早い。最後まで戦うんだ。",
+      "translation": "现在放弃还为时过早。要战斗到最后一刻。",
+      "seconds": 2.858
+     },
+     {
+      "source": "この力…まさか、封印が解けたのか？",
+      "translation": "这股力量……难不成，封印已经解开了吗？",
+      "seconds": 3.256
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "新闻",
+    "lines": [
+     {
+      "source": "政府は来年度から新たな少子化対策を実施すると発表しました。",
+      "translation": "政府宣布，从下个财政年度开始将实施新的少子化对策。",
+      "seconds": 3.687
+     },
+     {
+      "source": "東京都内では今日、最高気温が三十五度を超える猛暑日となりました。",
+      "translation": "今天，东京都出现了高温天气，最高气温超过35度，属于酷热日。",
+      "seconds": 4.373
+     }
+    ]
+   },
+   {
+    "language": "ja",
+    "title": "省略主语",
+    "lines": [
+     {
+      "source": "もう行かなきゃ。",
+      "translation": "该走了。",
+      "seconds": 0.889
+     },
+     {
+      "source": "えっ、もう？まだ来たばかりじゃん。",
+      "translation": "啊，已经要走了？我们才刚到而已啊。",
+      "seconds": 2.962
+     },
+     {
+      "source": "ごめん、明日早いんだ。",
+      "translation": "抱歉，明天要早起。",
+      "seconds": 1.864
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "日常对话",
+    "lines": [
+     {
+      "source": "Hey, are you coming to the party tonight?",
+      "translation": "嘿，你今晚会来参加派对吗？",
+      "seconds": 2.2
+     },
+     {
+      "source": "I don't know, I've got a ton of work to catch up on.",
+      "translation": "我不知道，我有好多工作要补做。",
+      "seconds": 2.279
+     },
+     {
+      "source": "Come on, it's Friday. You can't be serious.",
+      "translation": "得了吧，今天是周五啊。你不会是认真的吧。",
+      "seconds": 3.228
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "影视台词",
+    "lines": [
+     {
+      "source": "We're running out of time. The whole city is counting on us.",
+      "translation": "我们的时间所剩无几了。整个城市都在期待着我们。",
+      "seconds": 3.03
+     },
+     {
+      "source": "I never asked for any of this.",
+      "translation": "我从未要求过这一切。",
+      "seconds": 1.694
+     },
+     {
+      "source": "Whatever happens, don't look back.",
+      "translation": "无论发生什么，都不要回头。",
+      "seconds": 2.354
+     }
+    ]
+   },
+   {
+    "language": "en",
+    "title": "新闻/讲解",
+    "lines": [
+     {
+      "source": "The central bank decided to keep interest rates unchanged for the third consecutive month.",
+      "translation": "央行决定连续第三个月保持利率不变。",
+      "seconds": 2.002
+     },
+     {
+      "source": "In this video, we'll walk through how to set up the development environment step by step.",
+      "translation": "在这段视频中，我们将一步步讲解如何搭建开发环境。",
+      "seconds": 3.088
+     }
+    ]
+   }
+  ]
+ }
+]

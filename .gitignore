@@ -1,0 +1,15 @@
+**/bin/
+**/obj/
+/.venv/
+/models/
+/.cache/
+/data/
+/artifacts/
+**/.tmp/
+*.log
+**/__pycache__/
+TestResults/
+.vs/
+*.user
+.env
+.env.*

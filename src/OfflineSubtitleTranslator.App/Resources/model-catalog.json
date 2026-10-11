@@ -1,0 +1,573 @@
+{
+  "version": 1,
+  "sources": {
+    "huggingface": [
+      "https://hf-mirror.com",
+      "https://huggingface.co"
+    ],
+    "github": [
+      "https://gh-proxy.com/https://github.com",
+      "https://github.com"
+    ],
+    "pypi": [
+      "https://pypi.tuna.tsinghua.edu.cn/packages",
+      "https://files.pythonhosted.org/packages"
+    ],
+    "argos": [
+      "https://argos-net.com/v1"
+    ]
+  },
+  "items": [
+    {
+      "id": "whisper-base",
+      "kind": "asr",
+      "priority": 40,
+      "cpuPriority": 40,
+      "name": "Whisper base",
+      "description": "最小的可用模型，CPU 上也很快，但日语错字较多。",
+      "license": "MIT",
+      "vramMb": 500,
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-base/resolve/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/config.json",
+          "name": "config.json",
+          "size": 2309,
+          "gitSha1": "867cf1a0fece1394e01d55e287ba2f09a577c046"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-base/resolve/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/model.bin",
+          "name": "model.bin",
+          "size": 145217532,
+          "sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-base/resolve/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/tokenizer.json",
+          "name": "tokenizer.json",
+          "size": 2203239,
+          "gitSha1": "7818adb6de9fa3064d3ff81226fdd675be1f6344"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-base/resolve/ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66/vocabulary.txt",
+          "name": "vocabulary.txt",
+          "size": 459861,
+          "gitSha1": "c9074644d9d1205686f16d411564729461324b75"
+        }
+      ]
+    },
+    {
+      "id": "whisper-small",
+      "kind": "asr",
+      "priority": 50,
+      "cpuPriority": 30,
+      "name": "Whisper small",
+      "description": "没有显卡时的折中选择，比 base 准确，CPU 上每段约 1~3 秒。",
+      "license": "MIT",
+      "vramMb": 1000,
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-small/resolve/536b0662742c02347bc0e980a01041f333bce120/config.json",
+          "name": "config.json",
+          "size": 2370,
+          "gitSha1": "e5047537059bd8f182d9ca64c470201585015187"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-small/resolve/536b0662742c02347bc0e980a01041f333bce120/model.bin",
+          "name": "model.bin",
+          "size": 483546902,
+          "sha256": "3e305921506d8872816023e4c273e75d2419fb89b24da97b4fe7bce14170d671"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-small/resolve/536b0662742c02347bc0e980a01041f333bce120/tokenizer.json",
+          "name": "tokenizer.json",
+          "size": 2203239,
+          "gitSha1": "7818adb6de9fa3064d3ff81226fdd675be1f6344"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-small/resolve/536b0662742c02347bc0e980a01041f333bce120/vocabulary.txt",
+          "name": "vocabulary.txt",
+          "size": 459861,
+          "gitSha1": "c9074644d9d1205686f16d411564729461324b75"
+        }
+      ]
+    },
+    {
+      "id": "whisper-medium",
+      "kind": "asr",
+      "priority": 60,
+      "cpuPriority": 0,
+      "name": "Whisper medium",
+      "description": "准确度较高，但比 large-v3-turbo 慢，一般不推荐。",
+      "license": "MIT",
+      "vramMb": 2000,
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-medium/resolve/08e178d48790749d25932bbc082711ddcfdfbc4f/config.json",
+          "name": "config.json",
+          "size": 2257,
+          "gitSha1": "242aa06a480a7b5509375c645097e87af5136774"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-medium/resolve/08e178d48790749d25932bbc082711ddcfdfbc4f/model.bin",
+          "name": "model.bin",
+          "size": 1527906378,
+          "sha256": "9b45e1009dcc4ab601eff815b61d80e60ce3fd8c74c1a14f4a282258286b51ae"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-medium/resolve/08e178d48790749d25932bbc082711ddcfdfbc4f/tokenizer.json",
+          "name": "tokenizer.json",
+          "size": 2203239,
+          "gitSha1": "7818adb6de9fa3064d3ff81226fdd675be1f6344"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-medium/resolve/08e178d48790749d25932bbc082711ddcfdfbc4f/vocabulary.txt",
+          "name": "vocabulary.txt",
+          "size": 459861,
+          "gitSha1": "c9074644d9d1205686f16d411564729461324b75"
+        }
+      ]
+    },
+    {
+      "id": "whisper-large-v3-turbo",
+      "kind": "asr",
+      "priority": 90,
+      "cpuPriority": 0,
+      "name": "Whisper large-v3-turbo",
+      "description": "准确度接近 large-v3，速度快很多。有 NVIDIA 显卡时首选，需要同时下载“CUDA 识别加速”。",
+      "license": "MIT",
+      "vramMb": 2000,
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/config.json",
+          "name": "config.json",
+          "size": 2263,
+          "gitSha1": "0351d1d6870005e865747b781b5d7c23ea0459cd"
+        },
+        {
+          "source": "huggingface",
+          "path": "mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/model.bin",
+          "name": "model.bin",
+          "size": 1617884929,
+          "sha256": "e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da"
+        },
+        {
+          "source": "huggingface",
+          "path": "mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/preprocessor_config.json",
+          "name": "preprocessor_config.json",
+          "size": 340,
+          "gitSha1": "931c77a740890c46365c7ae0c9d350ba3cca908f"
+        },
+        {
+          "source": "huggingface",
+          "path": "mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/tokenizer.json",
+          "name": "tokenizer.json",
+          "size": 2710337,
+          "gitSha1": "17456db595adc78a973f97d69d8cb50bc87c0b1c"
+        },
+        {
+          "source": "huggingface",
+          "path": "mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/vocabulary.json",
+          "name": "vocabulary.json",
+          "size": 1068114,
+          "gitSha1": "0adcd01e7c237205d593b707e66dd5d7bc785d2d"
+        }
+      ]
+    },
+    {
+      "id": "whisper-large-v3",
+      "kind": "asr",
+      "priority": 85,
+      "cpuPriority": 0,
+      "name": "Whisper large-v3",
+      "description": "准确度最高，速度约为 turbo 的一半，与 7B 翻译模型同时运行需要约 10 GB 显存。",
+      "license": "MIT",
+      "vramMb": 3500,
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-large-v3/resolve/edaa852ec7e145841d8ffdb056a99866b5f0a478/config.json",
+          "name": "config.json",
+          "size": 2394,
+          "gitSha1": "75336feae814999bae6ccccdecf177639ffc6f9d"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-large-v3/resolve/edaa852ec7e145841d8ffdb056a99866b5f0a478/model.bin",
+          "name": "model.bin",
+          "size": 3087284237,
+          "sha256": "69f74147e3334731bc3a76048724833325d2ec74642fb52620eda87352e3d4f1"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-large-v3/resolve/edaa852ec7e145841d8ffdb056a99866b5f0a478/preprocessor_config.json",
+          "name": "preprocessor_config.json",
+          "size": 340,
+          "gitSha1": "931c77a740890c46365c7ae0c9d350ba3cca908f"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-large-v3/resolve/edaa852ec7e145841d8ffdb056a99866b5f0a478/tokenizer.json",
+          "name": "tokenizer.json",
+          "size": 2480617,
+          "gitSha1": "3a5e2ba63acdcac9a19ba56cf9bd27f185bfff61"
+        },
+        {
+          "source": "huggingface",
+          "path": "Systran/faster-whisper-large-v3/resolve/edaa852ec7e145841d8ffdb056a99866b5f0a478/vocabulary.json",
+          "name": "vocabulary.json",
+          "size": 1068114,
+          "gitSha1": "0adcd01e7c237205d593b707e66dd5d7bc785d2d"
+        }
+      ]
+    },
+    {
+      "id": "argos",
+      "kind": "translator",
+      "priority": 10,
+      "cpuPriority": 10,
+      "engine": "argos",
+      "name": "Argos Translate",
+      "description": "小型机器翻译，CPU 即可运行。日语需经英语中转，质量最低，仅作为没有显卡时的保底选项。",
+      "license": "CC0（en→zh）/ MIT（ja→en）",
+      "vramMb": 0,
+      "languages": [
+        "ja",
+        "en"
+      ],
+      "files": [
+        {
+          "source": "argos",
+          "path": "translate-en_zh-1_9.argosmodel",
+          "size": 70743021,
+          "sha256": "433e7c4f034d87fbe2353161e05f18646d7999452f801a4e1f0378522b9850ab",
+          "extract": "zip"
+        },
+        {
+          "source": "argos",
+          "path": "translate-ja_en-1_1.argosmodel",
+          "size": 117155716,
+          "sha256": "623e3477959a815eb0a5ef53e09079ae8f1f9d3bbcd230473baf28c03fb83335",
+          "extract": "zip"
+        }
+      ]
+    },
+    {
+      "id": "nllb-600m",
+      "kind": "translator",
+      "priority": 45,
+      "cpuPriority": 50,
+      "engine": "nllb",
+      "name": "NLLB-200 600M",
+      "description": "Meta 多语种机器翻译，日语直接译中文，CPU 也能用。逐句直译，口语较生硬。",
+      "license": "CC-BY-NC 4.0（禁止商用）",
+      "vramMb": 800,
+      "languages": [
+        "ja",
+        "en"
+      ],
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "JustFrederik/nllb-200-distilled-600M-ct2-int8/resolve/302d78f00e6fdb50a1064059df7c392b735e9d05/config.json",
+          "name": "config.json",
+          "size": 159,
+          "gitSha1": "338d32248dd94e6268192c8354c41c0eca5eeb62"
+        },
+        {
+          "source": "huggingface",
+          "path": "JustFrederik/nllb-200-distilled-600M-ct2-int8/resolve/302d78f00e6fdb50a1064059df7c392b735e9d05/model.bin",
+          "name": "model.bin",
+          "size": 622595991,
+          "sha256": "ed1beaf75134de7505315a5223162f56acff397eff6b50638a500d3936fe707b"
+        },
+        {
+          "source": "huggingface",
+          "path": "JustFrederik/nllb-200-distilled-600M-ct2-int8/resolve/302d78f00e6fdb50a1064059df7c392b735e9d05/sentencepiece.bpe.model",
+          "name": "sentencepiece.bpe.model",
+          "size": 4852054,
+          "sha256": "14bb8dfb35c0ffdea7bc01e56cea38b9e3d5efcdcb9c251d6b40538e1aab555a"
+        },
+        {
+          "source": "huggingface",
+          "path": "JustFrederik/nllb-200-distilled-600M-ct2-int8/resolve/302d78f00e6fdb50a1064059df7c392b735e9d05/shared_vocabulary.txt",
+          "name": "shared_vocabulary.txt",
+          "size": 2568098,
+          "gitSha1": "1f831354dfc504f6b866ad05aa8efd94919badf9"
+        }
+      ]
+    },
+    {
+      "id": "nllb-1.3b",
+      "kind": "translator",
+      "priority": 50,
+      "cpuPriority": 40,
+      "engine": "nllb",
+      "name": "NLLB-200 1.3B",
+      "description": "比 600M 版本准确一些，有显卡时速度很快。",
+      "license": "CC-BY-NC 4.0（禁止商用）",
+      "vramMb": 1600,
+      "languages": [
+        "ja",
+        "en"
+      ],
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "JustFrederik/nllb-200-distilled-1.3B-ct2-int8/resolve/30c36268408177b0fce2bfcfa205d877accd327d/config.json",
+          "name": "config.json",
+          "size": 159,
+          "gitSha1": "338d32248dd94e6268192c8354c41c0eca5eeb62"
+        },
+        {
+          "source": "huggingface",
+          "path": "JustFrederik/nllb-200-distilled-1.3B-ct2-int8/resolve/30c36268408177b0fce2bfcfa205d877accd327d/model.bin",
+          "name": "model.bin",
+          "size": 1381827087,
+          "sha256": "72d7533dc7a0e8f10f19a650d4e90faf9cbfa899db5411ad124bd5802bd91263"
+        },
+        {
+          "source": "huggingface",
+          "path": "JustFrederik/nllb-200-distilled-1.3B-ct2-int8/resolve/30c36268408177b0fce2bfcfa205d877accd327d/sentencepiece.bpe.model",
+          "name": "sentencepiece.bpe.model",
+          "size": 4852054,
+          "sha256": "14bb8dfb35c0ffdea7bc01e56cea38b9e3d5efcdcb9c251d6b40538e1aab555a"
+        },
+        {
+          "source": "huggingface",
+          "path": "JustFrederik/nllb-200-distilled-1.3B-ct2-int8/resolve/30c36268408177b0fce2bfcfa205d877accd327d/shared_vocabulary.txt",
+          "name": "shared_vocabulary.txt",
+          "size": 2568098,
+          "gitSha1": "1f831354dfc504f6b866ad05aa8efd94919badf9"
+        }
+      ]
+    },
+    {
+      "id": "hymt2-1.8b",
+      "kind": "translator",
+      "priority": 70,
+      "cpuPriority": 70,
+      "engine": "llm",
+      "style": "hymt",
+      "name": "腾讯混元 Hy-MT2 1.8B",
+      "description": "专用翻译大模型的小尺寸版本，显存占用小、速度快，会参考上文。",
+      "license": "Apache 2.0",
+      "vramMb": 2500,
+      "languages": [
+        "ja",
+        "en"
+      ],
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "tencent/Hy-MT2-1.8B-GGUF/resolve/a0c709d9fac510f2c807aa3af52872340dc37a4a/Hy-MT2-1.8B-Q6_K.gguf",
+          "name": "Hy-MT2-1.8B-Q6_K.gguf",
+          "size": 1474785120,
+          "sha256": "d98fe604dec1f28f58f80d7d560f7177e584d3b8e5835862687660e5ff97cb40"
+        }
+      ]
+    },
+    {
+      "id": "hymt2-7b",
+      "kind": "translator",
+      "priority": 90,
+      "cpuPriority": 0,
+      "engine": "llm",
+      "style": "hymt",
+      "name": "腾讯混元 Hy-MT2 7B",
+      "description": "专用翻译大模型，日语、英语都能译，会参考上文，需要约 6 GB 显存。",
+      "license": "Apache 2.0",
+      "vramMb": 6000,
+      "languages": [
+        "ja",
+        "en"
+      ],
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "tencent/Hy-MT2-7B-GGUF/resolve/ab8472660ac61fac25f1af43fac2599d52a8a775/Hy-MT2-7B-Q4_K_M.gguf",
+          "name": "Hy-MT2-7B-Q4_K_M.gguf",
+          "size": 4624648896,
+          "sha256": "9f96256500f3fc1ab4d64336b58f52a949a95ad7516b0c229476eef782f9f77b"
+        }
+      ]
+    },
+    {
+      "id": "qwen3-8b",
+      "kind": "translator",
+      "priority": 80,
+      "cpuPriority": 0,
+      "engine": "llm",
+      "style": "qwen",
+      "name": "通义千问 Qwen3 8B",
+      "description": "通用大模型，语言理解能力强，按字幕翻译的提示词使用，需要约 6.5 GB 显存。",
+      "license": "Apache 2.0",
+      "vramMb": 6500,
+      "languages": [
+        "ja",
+        "en"
+      ],
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "Qwen/Qwen3-8B-GGUF/resolve/7c41481f57cb95916b40956ab2f0b139b296d974/Qwen3-8B-Q4_K_M.gguf",
+          "name": "Qwen3-8B-Q4_K_M.gguf",
+          "size": 5027783488,
+          "sha256": "d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785"
+        }
+      ]
+    },
+    {
+      "id": "sakura-7b",
+      "kind": "translator",
+      "priority": 85,
+      "cpuPriority": 0,
+      "engine": "llm",
+      "style": "sakura",
+      "name": "Sakura-GalTransl 7B v3.7",
+      "description": "针对动画、轻小说、Galgame 训练的日译中模型，只适合日语输入，需要约 7.5 GB 显存。",
+      "license": "CC-BY-NC-SA 4.0（禁止商用）",
+      "vramMb": 7500,
+      "languages": [
+        "ja"
+      ],
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "SakuraLLM/Sakura-GalTransl-7B-v3.7/resolve/759d76b1745f4428308de6564c5ab710d4358b2e/Sakura-Galtransl-7B-v3.7.gguf",
+          "name": "Sakura-Galtransl-7B-v3.7.gguf",
+          "size": 6254196608,
+          "sha256": "e1ae01b1735cfdcd00a3c7e2e5e06ff3a2756cc0d7592f4b4f5945638a8629f2"
+        }
+      ]
+    },
+    {
+      "id": "cuda12-cublas",
+      "kind": "runtime",
+      "priority": 10,
+      "cpuPriority": 0,
+      "gpu": "cuda",
+      "minDriver": 528,
+      "provides": "whisper-cuda",
+      "name": "CUDA 识别加速（cuBLAS 12）",
+      "description": "让 Whisper 识别和 NLLB 翻译使用 NVIDIA 显卡，需要较新的 NVIDIA 驱动。",
+      "license": "NVIDIA CUDA EULA",
+      "files": [
+        {
+          "source": "pypi",
+          "path": "45/a1/a17fade6567c57452cfc8f967a40d1035bb9301db52f27808167fbb2be2f/nvidia_cublas_cu12-12.9.1.4-py3-none-win_amd64.whl",
+          "size": 553153899,
+          "sha256": "1e5fee10662e6e52bd71dec533fbbd4971bb70a5f24f3bc3793e5c2e9dc640bf",
+          "extract": "zip",
+          "include": "nvidia/cublas/bin/"
+        }
+      ]
+    },
+    {
+      "id": "llama-cuda13",
+      "kind": "runtime",
+      "priority": 40,
+      "cpuPriority": 0,
+      "gpu": "cuda",
+      "minDriver": 580,
+      "provides": "llama",
+      "name": "llama.cpp（CUDA 13，NVIDIA 显卡）",
+      "description": "运行大模型翻译引擎，RTX 20 系及以上显卡推荐，需要 NVIDIA 驱动 580 以上。",
+      "license": "MIT（llama.cpp）/ NVIDIA CUDA EULA",
+      "files": [
+        {
+          "source": "github",
+          "path": "ggml-org/llama.cpp/releases/download/b11552/llama-b11552-bin-win-cuda-13.4-x64.zip",
+          "size": 153473822,
+          "sha256": "11317b2c71c9b390c1dfe6e15ad11365ea3de097cc32221236fd257f4c3ecbcf",
+          "extract": "zip"
+        },
+        {
+          "source": "github",
+          "path": "ggml-org/llama.cpp/releases/download/b11552/cudart-llama-bin-win-cuda-13.4-x64.zip",
+          "size": 423535356,
+          "sha256": "738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668",
+          "extract": "zip"
+        }
+      ]
+    },
+    {
+      "id": "llama-cuda12",
+      "kind": "runtime",
+      "priority": 30,
+      "cpuPriority": 0,
+      "gpu": "cuda",
+      "minDriver": 528,
+      "provides": "llama",
+      "name": "llama.cpp（CUDA 12，旧驱动）",
+      "description": "NVIDIA 驱动较旧、CUDA 13 版本无法启动时使用。",
+      "license": "MIT（llama.cpp）/ NVIDIA CUDA EULA",
+      "files": [
+        {
+          "source": "github",
+          "path": "ggml-org/llama.cpp/releases/download/b11552/llama-b11552-bin-win-cuda-12.4-x64.zip",
+          "size": 265234947,
+          "sha256": "e48331718aa82aa34571cfad8510e6d6b9a8e4dad11a73e065f94f212e280256",
+          "extract": "zip"
+        },
+        {
+          "source": "github",
+          "path": "ggml-org/llama.cpp/releases/download/b11552/cudart-llama-bin-win-cuda-12.4-x64.zip",
+          "size": 391443627,
+          "sha256": "8c79a9b226de4b3cacfd1f83d24f962d0773be79f1e7b75c6af4ded7e32ae1d6",
+          "extract": "zip"
+        }
+      ]
+    },
+    {
+      "id": "llama-vulkan",
+      "kind": "runtime",
+      "priority": 20,
+      "cpuPriority": 20,
+      "gpu": "vulkan",
+      "provides": "llama",
+      "name": "llama.cpp（Vulkan，AMD/Intel 显卡）",
+      "description": "没有 NVIDIA 显卡时使用，支持大多数独立显卡和核显。",
+      "license": "MIT",
+      "files": [
+        {
+          "source": "github",
+          "path": "ggml-org/llama.cpp/releases/download/b11552/llama-b11552-bin-win-vulkan-x64.zip",
+          "size": 33473578,
+          "sha256": "83dc16325b532ba603034719e8377e28ca5093c5d4370141a6522f1a0250386c",
+          "extract": "zip"
+        }
+      ]
+    },
+    {
+      "id": "llama-cpu",
+      "kind": "runtime",
+      "priority": 10,
+      "cpuPriority": 10,
+      "provides": "llama",
+      "name": "llama.cpp（仅 CPU）",
+      "description": "没有可用显卡时的保底方案，7B 模型每句需要数秒。",
+      "license": "MIT",
+      "files": [
+        {
+          "source": "github",
+          "path": "ggml-org/llama.cpp/releases/download/b11552/llama-b11552-bin-win-cpu-x64.zip",
+          "size": 19528406,
+          "sha256": "c00741179811ff903b515eae28bdeef1f47af6e81c49920c4e68b62954e056d6",
+          "extract": "zip"
+        }
+      ]
+    }
+  ]
+}
