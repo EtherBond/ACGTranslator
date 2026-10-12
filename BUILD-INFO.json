@@ -5,8 +5,7 @@
   "configuration": "Release",
   "selfContained": true,
   "targetFramework": "net8.0-windows",
-  "sourceCommit": "96ede595ba213b138c9713c270256192513517ae",
-  "remoteCommit": "915b3a9542336a9d95cc0dd14f4a15cca2140e44",
-  "builtAtUtc": "2026-10-12T04:44:28.4988171Z",
+  "sourceCommit": "06cc6d7",
+  "builtAtUtc": "2026-10-12T05:32:16.0344069Z",
   "publishCommand": "dotnet publish src/ACGTranslator.App/ACGTranslator.App.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=false"
 }
