@@ -1,8 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/OfflineSubtitleTranslator.App/OfflineSubtitleTranslator.App.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/OfflineSubtitleTranslator.Tests/OfflineSubtitleTranslator.Tests.csproj" />
-  </Folder>
-</Solution>

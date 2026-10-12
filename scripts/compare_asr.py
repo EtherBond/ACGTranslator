@@ -22,7 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = ROOT / ".venv" / "Scripts" / "python.exe"
-WORKER = ROOT / "src" / "OfflineSubtitleTranslator.App" / "Resources" / "asr_worker.py"
+WORKER = ROOT / "src" / "ACGTranslator.App" / "Resources" / "asr_worker.py"
 MODELS = ROOT / "models" / "asr"
 CUBLAS = ROOT / "models" / "runtimes" / "cuda12-cublas"
 

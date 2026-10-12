@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PYTHON = ROOT / ".venv" / "Scripts" / "python.exe"
 RESOURCES = ROOT / "Resources"
 if not RESOURCES.is_dir():
-    RESOURCES = ROOT / "src" / "OfflineSubtitleTranslator.App" / "Resources"
+    RESOURCES = ROOT / "src" / "ACGTranslator.App" / "Resources"
 MODEL = ROOT / "models" / "asr" / "whisper-base"
 TRANSLATOR = ROOT / "models" / "translators" / "argos"
 

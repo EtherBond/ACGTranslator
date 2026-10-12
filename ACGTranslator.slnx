@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ACGTranslator.App/ACGTranslator.App.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ACGTranslator.Tests/ACGTranslator.Tests.csproj" />
+  </Folder>
+</Solution>

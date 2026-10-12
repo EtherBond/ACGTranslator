@@ -1,4 +1,4 @@
-# 离线实时翻译器 v1.0.0
+# ACGTranslator v1.0.0 — Windows 离线实时字幕翻译器
 
 首个 Windows x64 发布包，包含 v1.0.0 源码基线与首轮稳定性修复。
 
@@ -12,8 +12,8 @@
 
 ## 下载与安装
 
-- `OfflineSubtitleTranslator-v1.0.0-win-x64.zip`：普通用户下载，内置 .NET 8 运行时。
-- `OfflineSubtitleTranslator-v1.0.0-source.zip`：对应构建的源码快照，开发者使用。
+- `ACGTranslator-v1.0.0-win-x64.zip`：普通用户下载，内置 .NET 8 运行时。
+- `ACGTranslator-v1.0.0-source.zip`：对应构建的源码快照，开发者使用。
 - `SHA256SUMS.txt`：上述 ZIP 的 SHA-256 校验值。
 
 完整解压 Windows 包，安装 64 位 Python 3.10–3.13（建议 3.12），联网运行 `Setup.cmd`，成功后运行 `Start.cmd`。详细说明见包内 `README-Release.md`。

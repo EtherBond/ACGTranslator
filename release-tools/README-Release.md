@@ -1,10 +1,10 @@
-# 离线实时翻译器 v1.0.0 — Windows x64
+# ACGTranslator v1.0.0 — Windows x64 离线实时翻译器
 
 捕获电脑正在播放的英语或日语，显示原文和中文字幕，支持置顶悬浮窗、模型管理、会话历史、搜索清理和 SRT 导出。
 
 ## 首次运行
 
-1. 完整解压 ZIP 到可写目录，例如 `E:\Apps\OfflineSubtitleTranslator`。不要在压缩包内直接启动，也不要放到 Program Files。
+1. 完整解压 ZIP 到可写目录，例如 `E:\Apps\ACGTranslator`。不要在压缩包内直接启动，也不要放到 Program Files。
 2. 安装 64 位 Python 3.10–3.13（建议 3.12），安装时启用 Python Launcher。下载入口：https://www.python.org/downloads/windows/
 3. 联网双击 `Setup.cmd`。它会在当前目录创建 `.venv`、安装依赖、下载 Whisper base 和 Argos 日英中翻译包，并运行 worker 冒烟测试。下载耗时取决于网络，需为 Python 依赖和模型预留数 GB 空间。
 4. 出现 `Setup completed` 后双击 `Start.cmd`。在设置中选择输出设备和输入语言，播放带语音的音频，点击“开始识别”。
@@ -16,7 +16,7 @@
 
 - 程序和 .NET 运行时：包根目录；worker 和模型目录：`Resources`。
 - Python 环境：`.venv`；模型：`models`；下载缓存：`.cache`。
-- 用户设置和历史：`%LOCALAPPDATA%\OfflineSubtitleTranslator`。在历史窗口搜索、删除或导出记录；删除程序目录不会删除历史。
+- 用户设置和历史：`%LOCALAPPDATA%\ACGTranslator`。旧版 `%LOCALAPPDATA%\OfflineSubtitleTranslator` 会自动读取；在历史窗口搜索、删除或导出记录；删除程序目录不会删除历史。
 - 模型请通过模型管理窗口清理。关闭程序后可删除 `.cache` 下载缓存。
 - `.venv` 引用安装它的基础 Python，不能直接复制到另一台电脑使用。换电脑后重新运行 Setup。
 - 使用其他模型时，可运行 `Setup.cmd -SkipModels` 仅安装依赖，再通过应用的模型管理下载所需模型。

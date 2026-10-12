@@ -1,4 +1,4 @@
-# 离线实时翻译器 v1.0.0
+# ACGTranslator v1.0.0 — 离线实时翻译器
 
 Windows 桌面应用：捕获电脑正在播放的日语或英语语音，实时识别、翻译为简体中文，并在始终置顶的悬浮字幕窗口显示。运行时完全离线。
 
@@ -16,14 +16,14 @@ Windows 桌面应用：捕获电脑正在播放的日语或英语语音，实时
 ## 目录
 
 ```
-src/OfflineSubtitleTranslator.App     WPF 应用
+src/ACGTranslator.App     WPF 应用
   Resources/*.py                      本地识别/翻译 worker（JSON Lines 协议）
-tests/OfflineSubtitleTranslator.Tests xUnit 单元测试
+tests/ACGTranslator.Tests xUnit 单元测试
 scripts/prepare_models.py             联网准备模型
 scripts/smoke_test.py                 worker 端到端冒烟测试
 ```
 
-设置与历史保存在 `%LOCALAPPDATA%\OfflineSubtitleTranslator\`（可用环境变量 `SUBTITLE_DATA_DIR` 覆盖）。
+设置与历史保存在 `%LOCALAPPDATA%\ACGTranslator\`（可用环境变量 `SUBTITLE_DATA_DIR` 覆盖）。旧版 `%LOCALAPPDATA%\OfflineSubtitleTranslator\` 中的设置和历史会自动读取。
 
 ## 准备运行环境
 
@@ -42,10 +42,10 @@ python -m venv .venv
 ## 构建、测试与运行
 
 ```powershell
-dotnet build .\OfflineSubtitleTranslator.slnx
-dotnet test .\OfflineSubtitleTranslator.slnx
+dotnet build .\ACGTranslator.slnx
+dotnet test .\ACGTranslator.slnx
 .\.venv\Scripts\python.exe .\scripts\smoke_test.py
-.\src\OfflineSubtitleTranslator.App\bin\Debug\net8.0-windows\OfflineSubtitleTranslator.App.exe
+.\src\ACGTranslator.App\bin\Debug\net8.0-windows\ACGTranslator.App.exe
 ```
 
 ## 当前限制

@@ -7,4 +7,4 @@ if not exist "%~dp0.venv\Scripts\python.exe" (
   pause
   exit /b 1
 )
-start "" /D "%~dp0" "%~dp0OfflineSubtitleTranslator.App.exe"
+start "" /D "%~dp0" "%~dp0ACGTranslator.App.exe"

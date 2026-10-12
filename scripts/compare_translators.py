@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = ROOT / ".venv" / "Scripts" / "python.exe"
-WORKER = ROOT / "src" / "OfflineSubtitleTranslator.App" / "Resources" / "translate_worker.py"
+WORKER = ROOT / "src" / "ACGTranslator.App" / "Resources" / "translate_worker.py"
 MODELS = ROOT / "models"
 LLAMA = MODELS / "runtimes" / "llama-cuda13" / "llama-server.exe"
 CUBLAS = MODELS / "runtimes" / "cuda12-cublas"
