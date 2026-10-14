@@ -6,6 +6,7 @@ public static class CatalogKind
 {
     public const string Asr = "asr";
     public const string Translator = "translator";
+    public const string Speaker = "speaker";
     public const string Runtime = "runtime";
 }
 

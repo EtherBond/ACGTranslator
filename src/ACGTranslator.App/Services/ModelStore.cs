@@ -17,6 +17,7 @@ public sealed class ModelStore(ModelCatalog catalog, string root)
     public string GetDirectory(CatalogItem item) => Path.Combine(Root, item.Kind switch
     {
         CatalogKind.Asr => "asr",
+        CatalogKind.Speaker => "speakers",
         CatalogKind.Translator => "translators",
         _ => "runtimes"
     }, item.Id);

@@ -25,7 +25,7 @@ public partial class ModelWindow : Window
     private void Refresh()
     {
         _rows.Clear();
-        foreach (var item in _store.Catalog.Items.Where(item => item.Kind is CatalogKind.Asr or CatalogKind.Translator or CatalogKind.Runtime))
+        foreach (var item in _store.Catalog.Items.Where(item => item.Kind is CatalogKind.Asr or CatalogKind.Translator or CatalogKind.Runtime or CatalogKind.Speaker))
         {
             bool installed;
             try { installed = _store.IsInstalled(item); }
@@ -52,7 +52,7 @@ public partial class ModelWindow : Window
         else if (row.Item.Kind == CatalogKind.Translator) _settings.TranslatorId = row.Item.Id;
         else
         {
-            StatusText.Text = "运行库安装后会由引擎自动使用，无需单独选择";
+            StatusText.Text = row.Item.Kind == CatalogKind.Speaker ? "接话模型安装后在设置中开启接话增强，再点击保存" : "运行库安装后会由引擎自动使用，无需单独选择";
             return;
         }
         Refresh();
@@ -93,7 +93,7 @@ public partial class ModelWindow : Window
         public CatalogItem Item { get; } = item;
         public bool Installed { get; } = installed;
         public string Status => Installed ? (selected ? "当前" : "已安装") : "未安装";
-        public string KindName => Item.Kind switch { CatalogKind.Asr => "识别", CatalogKind.Translator => "翻译", _ => "运行库" };
+        public string KindName => Item.Kind switch { CatalogKind.Asr => "识别", CatalogKind.Translator => "翻译", CatalogKind.Speaker => "接话增强", _ => "运行库" };
         public string Name => Item.Name;
         public string SizeText => Item.TotalSize >= 1073741824 ? $"{Item.TotalSize / 1073741824d:0.0} GB" : $"{Item.TotalSize / 1048576d:0} MB";
         public string Description => Item.Description;

@@ -1,4 +1,4 @@
-# ACGTranslator v1.0.0 — 离线实时翻译器
+# ACGTranslator v1.0.1（实验性接话增强） — 离线实时翻译器
 
 Windows 桌面应用：捕获电脑正在播放的日语或英语语音，实时识别、翻译为简体中文，并在始终置顶的悬浮字幕窗口显示。运行时完全离线。
 
@@ -47,6 +47,20 @@ dotnet test .\ACGTranslator.slnx
 .\.venv\Scripts\python.exe .\scripts\smoke_test.py
 .\src\ACGTranslator.App\bin\Debug\net8.0-windows\ACGTranslator.App.exe
 ```
+
+## v1.0.1 快速接话增强
+
+设置中的“快速接话增强”只临时比较当前片段的声音变化，不注册身份、不保存声纹。
+在模型管理下载 **WeSpeaker 接话模型**，更新 Python 依赖后保存设置。
+未安装模型或关闭增强时保持普通流程。模型推理出错时提示并回退。
+确认换人后分别识别、翻译并显示两句；历史和双语 SRT 也分别保存。
+
+本版每个音频片段最多核查出一个换人边界，极短回应和同时说话暂不能可靠处理。
+正常片段也有少量词时间戳/特征检测成本；确认边界后会多做两次识别。
+英语合成语音测试已验证分段路径，真实日语动漫/英语对话精度仍待评测。
+
+详见 [开发方案](docs/v1.0.1-plan.md) 与 [验证记录](docs/v1.0.1-validation.md)。
+运行功能回归：python scripts/test_turns.py；模型冒烟：python scripts/smoke_turns.py。
 
 ## 当前限制
 

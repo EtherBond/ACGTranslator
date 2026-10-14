@@ -1,5 +1,5 @@
 """Local ASR JSON-lines worker. Model files must already exist locally."""
-import argparse, base64, sys
+import argparse, base64, sys, time
 
 from worker_protocol import add_dll_directories, emit, requests
 
@@ -9,9 +9,10 @@ SAMPLE_RATE = 16000
 AUTO_LANGUAGE_MIN_PROBABILITY = 0.35
 
 
-def transcribe(model, audio, language, options):
+def transcribe(model, audio, language, options, detector=None):
     forced = language if language in SUPPORTED_LANGUAGES else None
-    segments, info = model.transcribe(audio, language=forced, **options)
+    decode_options = dict(options, word_timestamps=True) if detector is not None else options
+    segments, info = model.transcribe(audio, language=forced, **decode_options)
     if forced is None and info.language not in SUPPORTED_LANGUAGES:
         # Only retry when the model has meaningful evidence for one of the two
         # supported languages. For music/noise, returning an empty result is
@@ -20,22 +21,48 @@ def transcribe(model, audio, language, options):
         candidate = max(SUPPORTED_LANGUAGES, key=lambda code: probabilities.get(code, 0.0))
         if probabilities.get(candidate, 0.0) >= AUTO_LANGUAGE_MIN_PROBABILITY:
             forced = candidate
-            segments, info = model.transcribe(audio, language=forced, **options)
+            segments, info = model.transcribe(audio, language=forced, **decode_options)
         else:
             return {"language": info.language, "text": "", "start": 0.0, "end": len(audio) / SAMPLE_RATE}
-    parts, start, end = [], None, None
+    parts, start, end, words = [], None, None, []
     for segment in segments:
         if not segment.text.strip():
             continue
         parts.append(segment.text)
+        for word in getattr(segment, 'words', None) or []:
+            words.append({'start': word.start, 'end': word.end, 'text': word.word})
         start = segment.start if start is None else start
         end = segment.end
-    return {
+    result = {
         "language": forced or info.language,
         "text": "".join(parts).strip(),
-        "start": start or 0.0,
-        "end": end if end is not None else len(audio) / SAMPLE_RATE,
+        "start": max(0., min(start or 0., len(audio) / SAMPLE_RATE)),
+        "end": max(0., min(end if end is not None else len(audio) / SAMPLE_RATE, len(audio) / SAMPLE_RATE)),
     }
+    if detector is not None and result["text"]:
+        try:
+            boundary = detector.detect(audio, words)
+            if boundary is not None:
+                cut = round(boundary * SAMPLE_RATE)
+                split = []
+                # At most two retries. Keep the original if either side fails.
+                for offset, chunk in ((0., audio[:cut]), (cut / SAMPLE_RATE, audio[cut:])):
+                    piece = transcribe(model, chunk, result["language"], options)
+                    if not piece["text"]:
+                        raise ValueError("分段复核没有得到完整文字")
+                    piece["start"] = max(0., min(len(chunk)/SAMPLE_RATE, piece["start"])) + offset
+                    piece["end"] = max(piece["start"], min(len(chunk)/SAMPLE_RATE, piece["end"]) + offset)
+                    split.append(piece)
+                result["segments"] = split
+                result["turn_status"] = "split"
+            else:
+                result["turn_status"] = "unchanged"
+        except TimeoutError:
+            result["turn_status"] = "budget"
+        except Exception as exc:
+            result["turn_status"] = "fallback"
+            result["warning"] = f"接话增强已回退到普通识别：{exc}"
+    return result
 
 
 def main():
@@ -44,6 +71,7 @@ def main():
     parser.add_argument("--device", choices=["cpu", "cuda"], default="cpu")
     parser.add_argument("--dll-dir", action="append", default=[])
     parser.add_argument("--beam-size", type=int, default=0, help="0 picks 5 on CUDA and 2 on CPU")
+    parser.add_argument("--turn-model", default="", help="Optional local WeSpeaker ONNX model")
     args = parser.parse_args()
     add_dll_directories(args.dll_dir)
     try:
@@ -78,7 +106,19 @@ def main():
         hint = "（缺少 CUDA 运行库，请在模型管理中下载“CUDA 识别加速”，或改用 CPU）" if "dll" in str(exc).lower() else ""
         emit({"error": f"无法加载 Whisper 模型 {args.model}：{exc}{hint}"})
         return 3
+
+    detector, turn_warning = None, ""
+    if args.turn_model:
+        try:
+            from turn_detector import SpeakerEmbedding, TurnDetector
+            embed = SpeakerEmbedding(args.turn_model)
+            embed(np.zeros(SAMPLE_RATE, dtype=np.float32))
+            detector = TurnDetector(embed)
+        except Exception as exc:
+            turn_warning = f"接话增强不可用，继续普通识别：{exc}"
     emit({"ready": True})
+    cooldown = 0
+
     for request in requests():
         try:
             if request.get("type") != "transcribe":
@@ -88,7 +128,30 @@ def main():
                 emit({"error": "只支持 16 kHz 单声道音频"})
                 continue
             audio = np.frombuffer(base64.b64decode(request["audio_base64"]), dtype=np.float32)
-            emit(transcribe(model, audio, request.get("language", "auto"), options))
+
+            started = time.monotonic()
+            use_turns = detector is not None and request.get("turn_enhancement", True) and cooldown == 0
+            try:
+                result = transcribe(model, audio, request.get("language", "auto"), options,
+                                    detector if use_turns else None)
+            except Exception as exc:
+                if not use_turns:
+                    raise
+                result = transcribe(model, audio, request.get("language", "auto"), options)
+                result["warning"] = f"接话增强已停用，继续普通识别：{exc}"
+                result["turn_status"] = "fallback"
+                detector = None
+            if cooldown:
+                cooldown -= 1
+                result["turn_status"] = "cooldown"
+            elif use_turns and (result.get("turn_status") == "budget" or
+                               time.monotonic() - started > max(1., len(audio) / SAMPLE_RATE)):
+                cooldown = 3
+            if turn_warning:
+                result["warning"] = turn_warning
+                turn_warning = ""
+            emit(result)
+
         except Exception as exc:
             emit({"error": str(exc)})
     return 0

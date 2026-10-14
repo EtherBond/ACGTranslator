@@ -568,6 +568,22 @@
           "extract": "zip"
         }
       ]
+    },
+    {
+      "id": "wespeaker-resnet34",
+      "kind": "speaker",
+      "name": "WeSpeaker 接话模型（实验性）",
+      "description": "本地核查快速接话的换人边界，不保存声纹；安装后在设置中开启。需 v1.0.1 Python 依赖。日语及动漫声音效果待实测。",
+      "license": "CC-BY-4.0",
+      "files": [
+        {
+          "source": "huggingface",
+          "path": "Wespeaker/wespeaker-voxceleb-resnet34-LM/resolve/f0c48c298fd835726c27956a5d617bad7115627e/voxceleb_resnet34_LM.onnx",
+          "name": "speaker.onnx",
+          "size": 26530309,
+          "sha256": "7bb2f06e9df17cdf1ef14ee8a15ab08ed28e8d0ef5054ee135741560df2ec068"
+        }
+      ]
     }
   ]
 }

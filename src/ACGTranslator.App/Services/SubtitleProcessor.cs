@@ -57,20 +57,27 @@ public sealed class SubtitleProcessor : IAsyncDisposable
             try
             {
                 var result = await _recognizer.RecognizeAsync(segment.Samples, _stop.Token);
-                if (string.IsNullOrWhiteSpace(result.Text)) continue;
-                var entry = new SubtitleEntry
+                if (result.Warning is not null) Failed?.Invoke(this, new(result.Warning));
+                var results = result.Segments.Count > 0 ? result.Segments : new[] { result };
+                Guid? turnGroup = result.Segments.Count > 1 ? Guid.NewGuid() : null;
+                foreach (var part in results)
                 {
-                    SessionId = session.Id,
-                    SessionName = session.Name,
-                    Timestamp = DateTimeOffset.Now,
-                    Start = segment.Start + TimeSpan.FromSeconds(result.StartSeconds),
-                    End = segment.Start + TimeSpan.FromSeconds(Math.Max(result.EndSeconds, result.StartSeconds + 0.5)),
-                    SourceLanguage = result.Language,
-                    SourceText = result.Text,
-                    Status = "识别完成"
-                };
-                Recognized?.Invoke(this, new(entry));
-                await _recognized.Writer.WriteAsync(entry, _stop.Token);
+                    if (string.IsNullOrWhiteSpace(part.Text)) continue;
+                    var entry = new SubtitleEntry
+                    {
+                        TurnGroupId = turnGroup,
+                        SessionId = session.Id,
+                        SessionName = session.Name,
+                        Timestamp = DateTimeOffset.Now,
+                        Start = segment.Start + TimeSpan.FromSeconds(part.StartSeconds),
+                        End = segment.Start + TimeSpan.FromSeconds(Math.Max(part.EndSeconds, part.StartSeconds + 0.01)),
+                        SourceLanguage = part.Language,
+                        SourceText = part.Text,
+                        Status = "识别完成"
+                    };
+                    Recognized?.Invoke(this, new(entry));
+                    await _recognized.Writer.WriteAsync(entry, _stop.Token);
+                }
             }
             catch (OperationCanceledException) when (_stop.IsCancellationRequested) { break; }
             catch (Exception ex) { Failed?.Invoke(this, new($"识别失败：{ex.Message}")); }

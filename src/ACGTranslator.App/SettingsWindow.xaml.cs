@@ -24,6 +24,7 @@ public partial class SettingsWindow : Window
         ShowSourceBox.IsChecked = settings.ShowSource;
         AlwaysOnTopBox.IsChecked = settings.IsAlwaysOnTop;
         SaveHistoryBox.IsChecked = settings.SaveHistory;
+        TurnEnhancementBox.IsChecked = settings.TurnEnhancement;
         FontSizeSlider.Value = settings.FontSize;
         OpacitySlider.Value = settings.OverlayOpacity;
         PythonBox.Text = settings.PythonExecutable;
@@ -46,6 +47,9 @@ public partial class SettingsWindow : Window
 
     private void UpdateModelLabel()
     {
+        TurnModelLabel.Text = _modelStore.Installed(CatalogKind.Speaker).Any()
+            ? "接话模型已安装；保存设置后生效。"
+            : "接话模型未安装，当前使用普通识别。请在模型管理中下载 WeSpeaker 接话模型。";
         var asr = _modelStore.Catalog.Find(_settings.AsrModelId)?.Name ?? "自动选择已安装识别模型";
         var translator = _modelStore.Catalog.Find(_settings.TranslatorId)?.Name ?? "自动选择已安装翻译引擎";
         ModelLabel.Text = $"当前识别：{asr}\n当前翻译：{translator}";
@@ -90,6 +94,7 @@ public partial class SettingsWindow : Window
         _settings.ShowSource = ShowSourceBox.IsChecked == true;
         _settings.IsAlwaysOnTop = AlwaysOnTopBox.IsChecked == true;
         _settings.SaveHistory = SaveHistoryBox.IsChecked == true;
+        _settings.TurnEnhancement = TurnEnhancementBox.IsChecked == true;
         _settings.FontSize = FontSizeSlider.Value;
         _settings.OverlayOpacity = OpacitySlider.Value;
         _settings.PythonExecutable = python;

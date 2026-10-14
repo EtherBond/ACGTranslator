@@ -21,11 +21,13 @@
                 <TextBlock x:Name="StatusText" Text="未开始" Foreground="#FF9AD4FF" FontSize="12" HorizontalAlignment="Right" DockPanel.Dock="Right" VerticalAlignment="Center"
                            AutomationProperties.LiveSetting="Polite" />
             </DockPanel>
-            <StackPanel Grid.Row="1" Margin="0,8,0,8" VerticalAlignment="Bottom">
-                <TextBlock x:Name="SourceTextBlock" Text="等待音频采集…" Foreground="#FFB5B5BE" FontSize="17" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="55" />
-                <TextBlock x:Name="ChineseTextBlock" Text="点击“开始识别”捕获电脑正在播放的声音" Foreground="White" FontSize="26" FontWeight="SemiBold" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="75"
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="0,8,0,8" VerticalAlignment="Bottom">
+                <TextBlock x:Name="SourceTextBlock" Text="等待音频采集…" Foreground="#FFB5B5BE" FontSize="17" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" />
+                <TextBlock x:Name="ChineseTextBlock" Text="点击“开始识别”捕获电脑正在播放的声音" Foreground="White" FontSize="26" FontWeight="SemiBold" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                            AutomationProperties.LiveSetting="Polite" />
             </StackPanel>
+            </ScrollViewer>
             <TextBlock x:Name="ErrorText" Grid.Row="2" Visibility="Collapsed" Foreground="#FFFFB4A8" FontSize="12" TextTrimming="CharacterEllipsis"
                        Cursor="Hand" MouseLeftButtonUp="ErrorText_MouseLeftButtonUp" Margin="4,0,4,4" />
             <DockPanel Grid.Row="3">

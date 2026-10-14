@@ -1,0 +1,122 @@
+{
+  "scope": "Windows TTS synthetic English only; not real speech accuracy",
+  "embedding_1s_median_seconds": 0.025962650004657917,
+  "cases": [
+    {
+      "case": "single",
+      "expected_boundary": null,
+      "duration": 1.741375,
+      "results": {
+        "off": {
+          "seconds": 0.688,
+          "language": "en",
+          "text": "Can you help me find the station?",
+          "start": 0.0,
+          "end": 1.741375
+        },
+        "on": {
+          "seconds": 0.727,
+          "language": "en",
+          "text": "Can you help me find the station?",
+          "start": 0.0,
+          "end": 1.54,
+          "turn_status": "unchanged"
+        }
+      }
+    },
+    {
+      "case": "same_voice_no_gap",
+      "expected_boundary": null,
+      "duration": 3.9769375,
+      "results": {
+        "off": {
+          "seconds": 0.706,
+          "language": "en",
+          "text": "Can you help me find the station? Yes, it is just around the corner.",
+          "start": 0.0,
+          "end": 3.95
+        },
+        "on": {
+          "seconds": 0.96,
+          "language": "en",
+          "text": "Can you help me find the station? Yes, it is just around the corner.",
+          "start": 0.0,
+          "end": 3.81,
+          "turn_status": "unchanged"
+        }
+      }
+    },
+    {
+      "case": "two_voices_no_gap",
+      "expected_boundary": 1.741375,
+      "duration": 4.011875,
+      "results": {
+        "off": {
+          "seconds": 0.595,
+          "language": "en",
+          "text": "Can you help me find the station? Yes, it is just around the corner.",
+          "start": 0.0,
+          "end": 3.98
+        },
+        "on": {
+          "seconds": 2.456,
+          "language": "en",
+          "text": "Can you help me find the station? Yes, it is just around the corner.",
+          "start": 0.0,
+          "end": 3.82,
+          "segments": [
+            {
+              "language": "en",
+              "text": "Can you help me find the station?",
+              "start": 0.0,
+              "end": 1.66
+            },
+            {
+              "language": "en",
+              "text": "Yes, it is just around the corner.",
+              "start": 1.66,
+              "end": 3.8
+            }
+          ],
+          "turn_status": "split"
+        }
+      }
+    },
+    {
+      "case": "two_voices_short_gap",
+      "expected_boundary": 1.8163749999999999,
+      "duration": 4.161875,
+      "results": {
+        "off": {
+          "seconds": 0.632,
+          "language": "en",
+          "text": "Can you help me find the station? Yes, it is just around the corner.",
+          "start": 0.0,
+          "end": 4.15
+        },
+        "on": {
+          "seconds": 2.338,
+          "language": "en",
+          "text": "Can you help me find the station? Yes, it is just around the corner.",
+          "start": 0.0,
+          "end": 3.97,
+          "segments": [
+            {
+              "language": "en",
+              "text": "Can you help me find the station?",
+              "start": 0.0,
+              "end": 1.72
+            },
+            {
+              "language": "en",
+              "text": "Yes, it is just around the corner.",
+              "start": 1.79,
+              "end": 3.9400000000000004
+            }
+          ],
+          "turn_status": "split"
+        }
+      }
+    }
+  ]
+}

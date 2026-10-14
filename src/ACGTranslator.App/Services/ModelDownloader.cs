@@ -29,7 +29,7 @@ public sealed class ModelDownloader(ModelStore store, HttpClient? http = null)
             Timeout = Timeout.InfiniteTimeSpan
         };
         // hf-mirror.com rejects requests without a browser-like User-Agent.
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) ACGTranslator/0.3");
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) ACGTranslator/1.0.1");
         return client;
     }
 

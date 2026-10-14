@@ -22,5 +22,7 @@ public sealed class AppSettings
     // Advanced overrides.
     public string PythonExecutable { get; set; } = "";
     public string AsrModelPath { get; set; } = "";
+    // Local, ephemeral comparison; no persistent speaker identity.
+    public bool TurnEnhancement { get; set; } = true;
     public bool SaveHistory { get; set; } = true;
 }
