@@ -61,6 +61,7 @@ def main():
     for name in ('prepare_models.py','smoke_test.py','smoke_turns.py','capture_dataset.py'):
         shutil.copy2(ROOT/'scripts'/name,PACKAGE/'scripts'/name)
     shutil.copytree(ROOT/'docs',PACKAGE/'docs',dirs_exist_ok=True)
+    shutil.copy2(validation,PACKAGE/'VALIDATION.md')
     shutil.copy2(validation,OUT/'VALIDATION.md')
     shutil.copy2(ROOT/'release-tools'/f'RELEASE-NOTES-v{VERSION}.md',OUT/f'RELEASE-NOTES-v{VERSION}.md')
     binary = OUT/f'ACGTranslator-v{VERSION}-win-x64.zip'
@@ -68,7 +69,8 @@ def main():
     if binary.exists() or source_zip.exists(): raise FileExistsError('Release ZIP already exists; do not silently overwrite deliverables.')
     with zipfile.ZipFile(binary,'x',zipfile.ZIP_DEFLATED,compresslevel=6) as archive:
         for path in sorted(PACKAGE.rglob('*')):
-            if path.is_file(): archive.write(path,Path(PACKAGE.name)/path.relative_to(PACKAGE))
+            if path.is_file() and '__pycache__' not in path.parts and path.suffix != '.pyc':
+                archive.write(path,Path(PACKAGE.name)/path.relative_to(PACKAGE))
     git('archive','--format=zip',f'--prefix=ACGTranslator-v{VERSION}-source/',f'--output={source_zip}','HEAD')
     for path in (binary,source_zip):
         with zipfile.ZipFile(path) as archive:
