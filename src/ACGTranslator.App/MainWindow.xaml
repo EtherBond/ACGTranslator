@@ -30,13 +30,16 @@
             </ScrollViewer>
             <TextBlock x:Name="ErrorText" Grid.Row="2" Visibility="Collapsed" Foreground="#FFFFB4A8" FontSize="12" TextTrimming="CharacterEllipsis"
                        Cursor="Hand" MouseLeftButtonUp="ErrorText_MouseLeftButtonUp" Margin="4,0,4,4" />
-            <DockPanel Grid.Row="3">
+            <WrapPanel Grid.Row="3">
                 <Button x:Name="StartButton" Content="开始识别" Click="StartButton_Click" />
                 <Button Content="测试字幕" Click="TestButton_Click" ToolTip="预览字幕样式，不写入历史" />
                 <Button Content="历史管理" Click="HistoryButton_Click" />
+                <Button Content="延迟统计" Click="DiagnosticsButton_Click" ToolTip="查看各处理阶段耗时，可导出或清空；不记录字幕内容" />
+                <Button Content="游戏采集" Click="CaptureButton_Click" />
+                <Button Content="自动校准" Click="CalibrationButton_Click" />
                 <Button x:Name="SettingsButton" Content="设置" Click="SettingsButton_Click" />
                 <Button Content="×" Width="34" Click="CloseButton_Click" HorizontalAlignment="Right" DockPanel.Dock="Right" AutomationProperties.Name="关闭" />
-            </DockPanel>
+            </WrapPanel>
         </Grid>
     </Border>
 </Window>

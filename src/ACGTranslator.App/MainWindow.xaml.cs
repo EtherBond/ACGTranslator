@@ -16,6 +16,8 @@ public partial class MainWindow : Window
     private readonly ModelStore _modelStore;
     private readonly GpuInfo? _gpu;
     private readonly SubtitleDisplay _display = new();
+    private readonly PipelineDiagnostics _diagnostics = new();
+    private Guid[] _renderedSourceIds = [];
     private string? _engineError;
     private SubtitleProcessor? _processor;
     private SessionInfo _session = new(Guid.Empty, "");
@@ -43,6 +45,11 @@ public partial class MainWindow : Window
         _audioCapture.AudioChunk += AudioCapture_AudioChunk;
         _audioCapture.Stopped += AudioCapture_Stopped;
         _audioPipeline.SegmentReady += AudioPipeline_SegmentReady;
+        _audioPipeline.Failed += (_, e) => Dispatcher.BeginInvoke(() =>
+        {
+            ShowError(e.Message);
+            _audioCapture.Stop();
+        });
         RestoreSavedBounds();
         ApplySettings();
     }
@@ -65,6 +72,8 @@ public partial class MainWindow : Window
         Topmost = _settings.IsAlwaysOnTop;
         Opacity = _settings.OverlayOpacity;
         SourceTextBlock.Visibility = _settings.ShowSource ? Visibility.Visible : Visibility.Collapsed;
+        if (_settings.ShowSource)
+            foreach (var id in _renderedSourceIds) _diagnostics.MarkUiApplied(id, translation: false);
         ChineseTextBlock.FontSize = _settings.FontSize;
         SourceTextBlock.FontSize = Math.Max(12, _settings.FontSize * 0.65);
     }
@@ -108,11 +117,11 @@ public partial class MainWindow : Window
             _segmentsDetected = 0;
             _subtitlesCompleted = 0;
             _session = new(Guid.NewGuid(), $"实时字幕 {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-            _processor = new SubtitleProcessor(_asrClient, _translationClient);
+            _processor = new SubtitleProcessor(_asrClient, _translationClient, diagnostics: _diagnostics);
             _processor.Recognized += Processor_Recognized;
             _processor.Completed += Processor_Completed;
             _processor.Failed += Processor_Failed;
-            _audioPipeline.Start(_settings.MaxSegmentMs);
+            _audioPipeline.Start(_settings.MaxSegmentMs, _settings.SpeechSegmentation);
             _audioCapture.Start(_settings.OutputDeviceId);
             StartButton.Content = "停止识别";
             SettingsButton.IsEnabled = false;
@@ -154,10 +163,18 @@ public partial class MainWindow : Window
 
     private void RenderSubtitles()
     {
-        SourceTextBlock.Text = string.Join("\n", _display.Entries.Select(e => $"[{LanguageName(e.SourceLanguage)}] {e.SourceText}"));
-        ChineseTextBlock.Text = string.Join("\n", _display.Entries.Select(e =>
+        // Translation writes the shared entries on a background thread. Snapshot exactly
+        // what this render applies before recording first UI timings.
+        var visible = _display.Entries.Select(e => new { e.Id, e.SourceLanguage, e.SourceText, e.ChineseText, e.Status }).ToArray();
+        SourceTextBlock.Text = string.Join("\n", visible.Select(e => $"[{LanguageName(e.SourceLanguage)}] {e.SourceText}"));
+        _renderedSourceIds = visible.Select(e => e.Id).ToArray();
+        ChineseTextBlock.Text = string.Join("\n", visible.Select(e =>
             !string.IsNullOrWhiteSpace(e.ChineseText) ? e.ChineseText :
             e.Status == "识别完成" && SubtitleProcessor.IsTranslatable(e.SourceLanguage) ? "正在翻译…" : $"（{e.Status}）"));
+        if (_settings.ShowSource)
+            foreach (var entry in visible) _diagnostics.MarkUiApplied(entry.Id, translation: false);
+        foreach (var entry in visible.Where(e => !string.IsNullOrWhiteSpace(e.ChineseText)))
+            _diagnostics.MarkUiApplied(entry.Id, translation: true);
     }
 
     private void Processor_Completed(object? sender, SubtitleEventArgs e)
@@ -170,7 +187,10 @@ public partial class MainWindow : Window
         Interlocked.Increment(ref _subtitlesCompleted);
         Dispatcher.BeginInvoke(() =>
         {
-            if (_display.Completed(e.Entry)) RenderSubtitles();
+            if (_display.Completed(e.Entry))
+            {
+                RenderSubtitles();
+            }
             UpdateProgress();
         });
     }
@@ -233,6 +253,7 @@ public partial class MainWindow : Window
     private void TestButton_Click(object sender, RoutedEventArgs e)
     {
         // Preview only; nothing is written to history.
+        _renderedSourceIds = [];
         SourceTextBlock.Text = "[日语] これはテスト字幕です。";
         ChineseTextBlock.Text = "这是一条测试字幕。";
     }
@@ -243,15 +264,45 @@ public partial class MainWindow : Window
         ErrorText.Visibility = Visibility.Collapsed;
     }
 
+    private async void CalibrationButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_audioCapture.IsCapturing)
+        {
+            MessageBox.Show(this, "请先停止实时识别，再进行自动校准。", "自动校准");
+            return;
+        }
+        // Release resident models so candidate runs do not compete with idle workers.
+        _asrClient.Dispose(); _translationClient.Dispose();
+        try { new CalibrationWindow(_settings) { Owner = this }.ShowDialog(); }
+        finally
+        {
+            try { (_asrClient, _translationClient) = CreateClients(); _engineError = null; }
+            catch (Exception ex) { _engineError = ex.Message; (_asrClient, _translationClient) = CreateFallbackClients(); }
+            await WarmUpAsync();
+        }
+    }
+
+    private void CaptureButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_audioCapture.IsCapturing)
+        {
+            MessageBox.Show(this, "请先停止实时识别，再进入游戏测试采集。", "游戏采集");
+            return;
+        }
+        new CaptureWindow { Owner = this }.ShowDialog();
+    }
+
     private void HistoryButton_Click(object sender, RoutedEventArgs e) => new HistoryWindow { Owner = this }.ShowDialog();
+
+    private void DiagnosticsButton_Click(object sender, RoutedEventArgs e) => new DiagnosticsWindow(_diagnostics) { Owner = this }.ShowDialog();
 
     private async void SettingsButton_Click(object sender, RoutedEventArgs e)
     {
-        var previous = (_settings.PythonExecutable, _settings.AsrModelPath, _settings.AsrDevice, _settings.Language, _settings.AsrModelId, _settings.TranslatorId, _settings.TranslatorDevice, _settings.TurnEnhancement, TurnModelPath());
+        var previous = (_settings.PythonExecutable, _settings.AsrModelPath, _settings.AsrDevice, _settings.AsrBeamSize, _settings.Language, _settings.AsrModelId, _settings.TranslatorId, _settings.TranslatorDevice, _settings.TurnEnhancement, _settings.SpeechSegmentation, _settings.AdaptiveAsr, _settings.AsrComputeType, _settings.AsrHotwords, _settings.PreserveAsrContext, TurnModelPath());
         var window = new SettingsWindow(_settings, _modelStore) { Owner = this };
         if (window.ShowDialog() != true) return;
         ApplySettings();
-        if (previous == (_settings.PythonExecutable, _settings.AsrModelPath, _settings.AsrDevice, _settings.Language, _settings.AsrModelId, _settings.TranslatorId, _settings.TranslatorDevice, _settings.TurnEnhancement, TurnModelPath())) return;
+        if (previous == (_settings.PythonExecutable, _settings.AsrModelPath, _settings.AsrDevice, _settings.AsrBeamSize, _settings.Language, _settings.AsrModelId, _settings.TranslatorId, _settings.TranslatorDevice, _settings.TurnEnhancement, _settings.SpeechSegmentation, _settings.AdaptiveAsr, _settings.AsrComputeType, _settings.AsrHotwords, _settings.PreserveAsrContext, TurnModelPath())) return;
         // Worker options are fixed at process start, so restart them with the new settings.
         _asrClient.Dispose();
         _translationClient.Dispose();
@@ -305,7 +356,7 @@ public partial class MainWindow : Window
     {
         var asr = EngineResolver.ResolveAsr(_settings, _modelStore, _gpu);
         var translator = EngineResolver.ResolveTranslator(_settings, _modelStore, _gpu);
-        return (new LocalAsrClient(AppPaths.Python(_settings.PythonExecutable), asr, _settings.Language, TurnModelPath()),
+        return (new LocalAsrClient(AppPaths.Python(_settings.PythonExecutable), asr, _settings.Language, TurnModelPath(), _settings.AsrBeamSize, _settings.SpeechSegmentation, _settings.AdaptiveAsr, _settings.AsrComputeType, _settings.AsrHotwords, _settings.PreserveAsrContext),
             new LocalTranslationClient(AppPaths.Python(_settings.PythonExecutable), translator));
     }
 
@@ -314,7 +365,7 @@ public partial class MainWindow : Window
         var asr = new AsrPlan("未安装识别模型", Path.Combine(AppPaths.Models, "asr", "whisper-base"), "cpu", []);
         var translator = new TranslatorPlan(new CatalogItem { Id = "argos", Name = "未安装翻译引擎", Engine = "argos", Languages = ["ja", "en"] },
             ["--engine", "argos", "--model", Path.Combine(AppPaths.Models, "translators", "argos")], "cpu");
-        return (new LocalAsrClient(AppPaths.Python(_settings.PythonExecutable), asr, _settings.Language, TurnModelPath()),
+        return (new LocalAsrClient(AppPaths.Python(_settings.PythonExecutable), asr, _settings.Language, TurnModelPath(), _settings.AsrBeamSize, _settings.SpeechSegmentation, _settings.AdaptiveAsr, _settings.AsrComputeType, _settings.AsrHotwords, _settings.PreserveAsrContext),
             new LocalTranslationClient(AppPaths.Python(_settings.PythonExecutable), translator));
     }
 }

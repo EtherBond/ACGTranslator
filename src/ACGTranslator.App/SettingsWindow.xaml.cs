@@ -25,6 +25,12 @@ public partial class SettingsWindow : Window
         AlwaysOnTopBox.IsChecked = settings.IsAlwaysOnTop;
         SaveHistoryBox.IsChecked = settings.SaveHistory;
         TurnEnhancementBox.IsChecked = settings.TurnEnhancement;
+        SpeechSegmentationBox.IsChecked = settings.SpeechSegmentation;
+        AdaptiveAsrBox.IsChecked = settings.AdaptiveAsr;
+        PreserveAsrContextBox.IsChecked = settings.PreserveAsrContext;
+        ComputeTypeBox.SelectedValue = settings.AsrComputeType;
+        HotwordsBox.Text = settings.AsrHotwords;
+        BeamBox.SelectedValue = (settings.AsrBeamSize is 1 or 2 or 5 ? settings.AsrBeamSize : 0).ToString();
         FontSizeSlider.Value = settings.FontSize;
         OpacitySlider.Value = settings.OverlayOpacity;
         PythonBox.Text = settings.PythonExecutable;
@@ -95,6 +101,12 @@ public partial class SettingsWindow : Window
         _settings.IsAlwaysOnTop = AlwaysOnTopBox.IsChecked == true;
         _settings.SaveHistory = SaveHistoryBox.IsChecked == true;
         _settings.TurnEnhancement = TurnEnhancementBox.IsChecked == true;
+        _settings.SpeechSegmentation = SpeechSegmentationBox.IsChecked == true;
+        _settings.AdaptiveAsr = AdaptiveAsrBox.IsChecked == true;
+        _settings.PreserveAsrContext = PreserveAsrContextBox.IsChecked == true;
+        _settings.AsrComputeType = ComputeTypeBox.SelectedValue as string ?? "default";
+        _settings.AsrHotwords = HotwordsBox.Text.Trim();
+        _settings.AsrBeamSize = int.TryParse(BeamBox.SelectedValue as string, out var beam) ? beam : 0;
         _settings.FontSize = FontSizeSlider.Value;
         _settings.OverlayOpacity = OpacitySlider.Value;
         _settings.PythonExecutable = python;

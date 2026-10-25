@@ -12,6 +12,14 @@ public sealed class AppSettings
     public string OutputDeviceId { get; set; } = "";
     // "auto", "ja" or "en". A fixed language skips detection and avoids misdetected segments.
     public string Language { get; set; } = "auto";
+    // 0 keeps the device default; calibration may choose 1, 2 or 5.
+    public int AsrBeamSize { get; set; } = 0;
+    // Opt-in until independently evaluated on more recordings.
+    public bool SpeechSegmentation { get; set; }
+    public bool AdaptiveAsr { get; set; }
+    public bool PreserveAsrContext { get; set; }
+    public string AsrComputeType { get; set; } = "default";
+    public string AsrHotwords { get; set; } = "";
     public int MaxSegmentMs { get; set; } = 6000;
     // Catalog ids; empty or not installed means the best installed model is used.
     public string AsrModelId { get; set; } = "";

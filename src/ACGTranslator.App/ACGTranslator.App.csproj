@@ -2,9 +2,9 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <AssemblyName>ACGTranslator.App</AssemblyName>
-    <Version>1.0.1</Version>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -14,8 +14,12 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="Resources\*.py" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Resources\*.ps1" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../scripts/autotune.py" Link="Resources/autotune.py" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../scripts/galgame_bench.py" Link="Resources/galgame_bench.py" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Resources\model-catalog.json" CopyToOutputDirectory="PreserveNewest" />
     <InternalsVisibleTo Include="ACGTranslator.Tests" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.23.2" />
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
 </Project>

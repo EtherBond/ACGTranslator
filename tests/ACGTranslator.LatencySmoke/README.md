@@ -1,0 +1,15 @@
+# Latency smoke
+
+Build: `dotnet build tests/ACGTranslator.LatencySmoke -c Release`
+
+Run a built executable with `--root <project-root> --out <fresh-output-directory> --manifest <manifest.jsonl> [--translator hymt2-1.8b]`.
+
+The checked-in `manifest.example.jsonl` illustrates the four fields (`id`, `audio`, `language`, `scope`) with two Japanese and one English fixture. Supply your own recordings and replace the example audio paths before running; no audio, game screenshots, transcripts, or private experiment manifests are distributed with this repository. Relative audio paths resolve against the manifest directory; absolute paths are also supported. The runner requires at least three unique fixture IDs. Original/reference text is never given to ASR.
+
+The historical six-clip local experiment used three accepted Japanese clips and three Windows TTS English controls (single, same_voice_no_gap, two_voices_no_gap). Its private fixed manifest and evidence remain local. English controls are synthetic, not natural-conversation truth; Japanese references were visually transcribed with model crosschecks, not manual listening gold. The public example is a schema illustration, not the historical benchmark input.
+
+Uses actual SubtitleProcessor with sequential fixtures, actual CUDA Whisper large-v3-turbo fp16 beam5 plus wespeaker, and local translation. HyMT2-1.8B is a pinned bilingual smoke choice, not a change to the user's selected Sakura model or settings. Refuses missing translator fallback. Settings are never read/written. Each fixture gets a fresh session, so translation-context reset is included in that fixture's translation stage. Warmup is one first-fixture ASR/MT request followed by context reset; cold worker readiness and warmup are separate from measured fixture records.
+
+Actual WPF Dispatcher applies source/translation strings to hidden TextBlocks and marks diagnostics; actual DiagnosticsWindow is rendered to diagnostics.png and its Chinese metric headers checked. This is offline immediate replay, not paced live capture or a live-game endpoint benchmark. No SpeechEndTimestamp/SegmentReadyTimestamp is fabricated; estimated speech-end metrics must remain absent. UI applied does not measure screen present. Per-clip wall duration goes from Enqueue to last translation UI callback, whereas diagnostics contains each subtitle entry's stage timings. Warnings are preserved in output; failed/empty ASR/translation aborts instead of silently reporting success. Multi-turn fixture completion waits for every emitted part.
+
+Outputs result.json with fixture audio SHA256, manifest SHA256, worker-resource hashes, engine/arguments, cold load/warmup/preparation times and all per-fixture outputs; diagnostics.json with the actual pipeline snapshot; diagnostics.png. Do not generalize six clips' percentiles into production latency/quality. Compare copied baseline/current binary directories against the exact same manifest and translation model; fresh processes are required for cold-start comparisons. All workers are disposed at process exit. No live capture, training, configuration edits, or automatic downloads.

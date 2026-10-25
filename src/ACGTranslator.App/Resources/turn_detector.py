@@ -3,6 +3,7 @@
 Thresholds are conservative initial settings, NOT calibrated probabilities.
 Only examine word boundaries, including boundaries without an audible pause.
 """
+import os
 import time
 import numpy as np
 
@@ -12,18 +13,23 @@ MAX_CANDIDATES = 6
 
 
 class SpeakerEmbedding:
-    def __init__(self, path):
+    def __init__(self, path, intra_op_num_threads=None):
         import onnxruntime as ort
         import kaldi_native_fbank as knf
         self.knf = knf
+        # Bound CPU parallelism on smaller machines; callers may pin a setting
+        # for repeatable measurements or a lower-contention deployment.
+        if intra_op_num_threads is None:
+            available = os.cpu_count() or 1
+            if hasattr(os, "sched_getaffinity"):
+                available = min(available, len(os.sched_getaffinity(0)))
+            intra_op_num_threads = 4 if available >= 8 else 2
         options = ort.SessionOptions()
-        options.intra_op_num_threads = 2
+        options.intra_op_num_threads = intra_op_num_threads
         options.inter_op_num_threads = 1
         self.session = ort.InferenceSession(str(path), sess_options=options,
                                            providers=["CPUExecutionProvider"])
         self.input_name = self.session.get_inputs()[0].name
-
-    def __call__(self, audio):
         opts = self.knf.FbankOptions()
         opts.frame_opts.samp_freq = SAMPLE_RATE
         opts.frame_opts.dither = 0
@@ -33,13 +39,18 @@ class SpeakerEmbedding:
         opts.mel_opts.low_freq = 20
         opts.mel_opts.high_freq = 0
         opts.energy_floor = 0
-        bank = self.knf.OnlineFbank(opts)
+        self.fbank_options = opts
+
+    def __call__(self, audio):
+        # Each window still gets an independent bank, including its edge frames
+        # and mean subtraction; only the immutable configuration is reused.
+        bank = self.knf.OnlineFbank(self.fbank_options)
         # The official WeSpeaker model uses unnormalised signed 16-bit PCM.
         bank.accept_waveform(SAMPLE_RATE, (np.asarray(audio) * 32768).tolist())
         bank.input_finished()
-        features = np.stack([bank.get_frame(i) for i in range(bank.num_frames_ready)])
+        features = np.asarray([bank.get_frame(i) for i in range(bank.num_frames_ready)], dtype=np.float32)
         features -= features.mean(axis=0, keepdims=True)
-        vector = self.session.run(None, {self.input_name: features[None].astype(np.float32)})[0].reshape(-1)
+        vector = self.session.run(None, {self.input_name: features[None]})[0].reshape(-1)
         norm = np.linalg.norm(vector)
         if not np.isfinite(vector).all() or norm < 1e-8:
             raise ValueError("invalid speaker embedding")
@@ -94,12 +105,14 @@ class TurnDetector:
 
     def detect(self, audio, words):
         started = self.clock()
+        self.last_stats = {"candidates": 0, "embedding_calls": 0, "embedding_s": 0.}
         def check_budget():
             if self.clock() - started > self.budget_seconds:
                 raise TimeoutError("turn analysis budget exceeded")
 
         verified = []
         for point in candidates(words):
+            self.last_stats["candidates"] += 1
             check_budget()
             left_start = max(words[0]["start"], point - 1.6)
             right_end = min(words[-1]["end"], point + 1.6)
@@ -109,7 +122,10 @@ class TurnDetector:
                 continue
             def embedding(a, b):
                 check_budget()
+                embed_started = time.perf_counter()
+                self.last_stats["embedding_calls"] += 1
                 value = self.embed(audio[round(a*SAMPLE_RATE):round(b*SAMPLE_RATE)])
+                self.last_stats["embedding_s"] += time.perf_counter() - embed_started
                 check_budget()
                 return value
             left = embedding(left_start, point)

@@ -1,0 +1,8 @@
+# Install torch separately from the official CUDA index; see scripts/setup_training.ps1.
+transformers==4.57.1
+peft==0.17.1
+accelerate==1.10.1
+numpy==2.5.4
+av==19.0.1
+# Converter for exporting a successful candidate back to faster-whisper.
+ctranslate2==4.8.2

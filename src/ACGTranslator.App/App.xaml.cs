@@ -11,7 +11,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        var window = new MainWindow();
+        Window window = e.Args.Contains("--capture") ? new CaptureWindow() : e.Args.Contains("--calibrate") ? new CalibrationWindow(Settings.Load()) : new MainWindow();
         MainWindow = window;
         window.Show();
     }

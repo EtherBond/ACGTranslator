@@ -71,6 +71,7 @@ public class SubtitleProcessorTests
         await processor.DisposeAsync();
 
         Assert.Equal(0, count);
+        Assert.Equal("empty", Assert.Single(processor.Diagnostics.Snapshot().Records).Outcome);
     }
 
     [Fact]
@@ -125,6 +126,7 @@ public class SubtitleProcessorTests
         await processor.DisposeAsync();
 
         Assert.Equal(2, processor.Dropped);
+        Assert.Equal(2, processor.Diagnostics.Snapshot().Outcomes["dropped"]);
         Assert.Equal(["text1", "text4", "text5"], completed);
     }
 

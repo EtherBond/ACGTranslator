@@ -1,13 +1,7 @@
 {
   "product": "ACGTranslator",
-  "version": "1.0.1",
-  "channel": "experimental",
+  "version": "1.0.2",
   "platform": "win-x64",
-  "configuration": "Release",
-  "selfContained": true,
   "targetFramework": "net8.0-windows",
-  "sourceBaseCommit": "9f476d3f0a902a6d1831bd1ba556eb0b85e9ac35",
-  "sourceIncludesUncommittedChanges": true,
-  "packagedAtUtc": "2026-10-13T05:44:10.774139+00:00",
-  "publishCommand": "dotnet publish src/ACGTranslator.App/ACGTranslator.App.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=false -o artifacts/acgtranslator-v1.0.1/ACGTranslator-v1.0.1-win-x64"
+  "note": "Source metadata only. The release ZIP contains generated BUILD-INFO.json with the exact source commit, timestamp and publish command."
 }

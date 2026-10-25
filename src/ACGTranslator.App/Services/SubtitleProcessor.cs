@@ -21,45 +21,55 @@ public sealed class SubtitleProcessor : IAsyncDisposable
     public const int DefaultBacklog = 3;
     private readonly ISpeechRecognizer _recognizer;
     private readonly ITextTranslator _translator;
-    private readonly Channel<(SpeechSegmentEventArgs Segment, SessionInfo Session)> _segments;
-    private readonly Channel<SubtitleEntry> _recognized = Channel.CreateBounded<SubtitleEntry>(
+    private readonly Channel<(SpeechSegmentEventArgs Segment, SessionInfo Session, Guid DiagnosticId)> _segments;
+    private readonly Channel<(SubtitleEntry Entry, Guid DiagnosticId)> _recognized = Channel.CreateBounded<(SubtitleEntry, Guid)>(
         new BoundedChannelOptions(DefaultBacklog) { FullMode = BoundedChannelFullMode.Wait, SingleReader = true, SingleWriter = true });
     private readonly CancellationTokenSource _stop = new();
     private readonly Task _recognizing, _translating;
     private Guid? _translationSession;
     private int _dropped;
+    private readonly Guid _diagnosticOwner = Guid.NewGuid();
 
-    public SubtitleProcessor(ISpeechRecognizer recognizer, ITextTranslator translator, int backlog = DefaultBacklog)
+    public SubtitleProcessor(ISpeechRecognizer recognizer, ITextTranslator translator, int backlog = DefaultBacklog, PipelineDiagnostics? diagnostics = null)
     {
+        Diagnostics = diagnostics ?? new PipelineDiagnostics();
         _recognizer = recognizer;
         _translator = translator;
-        _segments = Channel.CreateBounded<(SpeechSegmentEventArgs, SessionInfo)>(
+        _segments = Channel.CreateBounded<(SpeechSegmentEventArgs, SessionInfo, Guid)>(
             new BoundedChannelOptions(backlog) { FullMode = BoundedChannelFullMode.DropOldest, SingleReader = true },
-            _ => Interlocked.Increment(ref _dropped));
+            item => { Interlocked.Increment(ref _dropped); Diagnostics.MarkOutcome(item.Item3, "dropped"); });
         _recognizing = Task.Run(RecognizeLoopAsync);
         _translating = Task.Run(TranslateLoopAsync);
     }
 
+    public PipelineDiagnostics Diagnostics { get; }
     public int Dropped => Volatile.Read(ref _dropped);
     // Recognized text is available; the Chinese line is still pending.
     public event EventHandler<SubtitleEventArgs>? Recognized;
     public event EventHandler<SubtitleEventArgs>? Completed;
     public event EventHandler<ProcessingErrorEventArgs>? Failed;
 
-    public void Enqueue(SpeechSegmentEventArgs segment, SessionInfo session) => _segments.Writer.TryWrite((segment, session));
+    public void Enqueue(SpeechSegmentEventArgs segment, SessionInfo session)
+    {
+        var id = Diagnostics.Enqueue(segment, _diagnosticOwner);
+        if (!_segments.Writer.TryWrite((segment, session, id))) Diagnostics.MarkOutcome(id, "rejected");
+    }
 
     private async Task RecognizeLoopAsync()
     {
         try
         {
-        await foreach (var (segment, session) in _segments.Reader.ReadAllAsync(_stop.Token))
+        await foreach (var (segment, session, diagnosticId) in _segments.Reader.ReadAllAsync(_stop.Token))
         {
             try
             {
+                Diagnostics.MarkAsrStart(diagnosticId);
                 var result = await _recognizer.RecognizeAsync(segment.Samples, _stop.Token);
+                Diagnostics.MarkAsrEnd(diagnosticId);
                 if (result.Warning is not null) Failed?.Invoke(this, new(result.Warning));
                 var results = result.Segments.Count > 0 ? result.Segments : new[] { result };
                 Guid? turnGroup = result.Segments.Count > 1 ? Guid.NewGuid() : null;
+                var emitted = false;
                 foreach (var part in results)
                 {
                     if (string.IsNullOrWhiteSpace(part.Text)) continue;
@@ -75,12 +85,15 @@ public sealed class SubtitleProcessor : IAsyncDisposable
                         SourceText = part.Text,
                         Status = "识别完成"
                     };
+                    emitted = true;
+                    Diagnostics.AttachEntry(diagnosticId, entry.Id);
                     Recognized?.Invoke(this, new(entry));
-                    await _recognized.Writer.WriteAsync(entry, _stop.Token);
+                    await _recognized.Writer.WriteAsync((entry, diagnosticId), _stop.Token);
                 }
+                if (!emitted) Diagnostics.MarkOutcome(diagnosticId, "empty");
             }
-            catch (OperationCanceledException) when (_stop.IsCancellationRequested) { break; }
-            catch (Exception ex) { Failed?.Invoke(this, new($"识别失败：{ex.Message}")); }
+            catch (OperationCanceledException) when (_stop.IsCancellationRequested) { Diagnostics.MarkOutcome(diagnosticId, "cancelled"); break; }
+            catch (Exception ex) { Diagnostics.MarkAsrEnd(diagnosticId); Diagnostics.MarkOutcome(diagnosticId, "asr_failed"); Failed?.Invoke(this, new($"识别失败：{ex.Message}")); }
         }
         }
         catch (OperationCanceledException) when (_stop.IsCancellationRequested) { }
@@ -91,10 +104,11 @@ public sealed class SubtitleProcessor : IAsyncDisposable
     {
         try
         {
-        await foreach (var entry in _recognized.Reader.ReadAllAsync(_stop.Token))
+        await foreach (var (entry, diagnosticId) in _recognized.Reader.ReadAllAsync(_stop.Token))
         {
             try
             {
+                Diagnostics.MarkTranslationStart(entry.Id);
                 if (_translationSession != entry.SessionId)
                 {
                     if (_translator is ITranslationContext context)
@@ -104,10 +118,12 @@ public sealed class SubtitleProcessor : IAsyncDisposable
                 if (IsChinese(entry.SourceLanguage)) entry.ChineseText = entry.SourceText;
                 else if (IsTranslatable(entry.SourceLanguage)) entry.ChineseText = await _translator.TranslateAsync(entry.SourceText, entry.SourceLanguage, _stop.Token);
                 entry.Status = string.IsNullOrWhiteSpace(entry.ChineseText) ? "未翻译" : "完成";
+                Diagnostics.MarkTranslationEnd(entry.Id);
             }
-            catch (OperationCanceledException) when (_stop.IsCancellationRequested) { break; }
+            catch (OperationCanceledException) when (_stop.IsCancellationRequested) { Diagnostics.MarkOutcome(entry.Id, "cancelled"); break; }
             catch (Exception ex)
             {
+                Diagnostics.MarkTranslationEnd(entry.Id); Diagnostics.MarkOutcome(entry.Id, "translation_failed");
                 entry.Status = "翻译失败";
                 Failed?.Invoke(this, new($"翻译失败：{ex.Message}"));
             }
@@ -129,6 +145,7 @@ public sealed class SubtitleProcessor : IAsyncDisposable
         catch (TimeoutException) { }
         _stop.Cancel();
         try { await Task.WhenAll(_recognizing, _translating).ConfigureAwait(false); } catch (OperationCanceledException) { }
+        Diagnostics.CancelOutstanding(_diagnosticOwner);
         _stop.Dispose();
     }
 }

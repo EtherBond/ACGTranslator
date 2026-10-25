@@ -5,6 +5,11 @@ public sealed class SpeechSegmentEventArgs(float[] samples, TimeSpan start, Time
     public float[] Samples { get; } = samples;
     public TimeSpan Start { get; } = start;
     public TimeSpan End { get; } = end;
+    // Gate-estimated endpoint, before trailing silence. Not a manual speech annotation.
+    public TimeSpan? SpeechEnd { get; init; }
+    // Live capture maps its sample timeline to the monotonic clock. Offline clips leave these unset.
+    public long? SpeechEndTimestamp { get; init; }
+    public long? SegmentReadyTimestamp { get; init; }
 }
 
 // Energy gate only; the ASR worker re-checks each segment with Silero VAD.
@@ -16,7 +21,7 @@ public sealed class VadSegmenter
     private readonly int _maximum;
     private readonly float[] _frame = new float[Frame];
     private int _fill, _silence, _voiced;
-    private long _position, _start;
+    private long _position, _start, _speechEnd;
     private readonly Queue<float> _pre = new();
     private readonly List<float> _current = [];
     public long ProcessedSamples => _position + _fill;
@@ -43,7 +48,7 @@ public sealed class VadSegmenter
         if (_current.Count != 0 || voice)
         {
             _current.AddRange(frame.ToArray());
-            if (voice) { _voiced += frame.Length; _silence = 0; }
+            if (voice) { _voiced += frame.Length; _silence = 0; _speechEnd = _position + frame.Length; }
             else _silence += frame.Length;
             _position += frame.Length;
             if (_silence >= EndSilence || _current.Count >= _maximum) Finish();
@@ -62,7 +67,8 @@ public sealed class VadSegmenter
     private void Finish()
     {
         SpeechSegmentEventArgs? ready = _voiced >= MinVoiced && _current.Count > 0
-            ? new(_current.ToArray(), TimeSpan.FromSeconds(_start / 16000d), TimeSpan.FromSeconds((_start + _current.Count) / 16000d)) : null;
+            ? new(_current.ToArray(), TimeSpan.FromSeconds(_start / 16000d), TimeSpan.FromSeconds((_start + _current.Count) / 16000d))
+                { SpeechEnd = TimeSpan.FromSeconds(_speechEnd / 16000d) } : null;
         _current.Clear(); _silence = 0; _voiced = 0;
         if (ready is not null) SegmentReady?.Invoke(this, ready);
     }

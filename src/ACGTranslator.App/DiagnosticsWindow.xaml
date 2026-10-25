@@ -1,0 +1,37 @@
+<Window x:Class="ACGTranslator.DiagnosticsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="字幕延迟统计" Width="960" Height="580" MinWidth="700" MinHeight="450"
+        WindowStartupLocation="CenterOwner" Background="White">
+    <DockPanel Margin="18" Background="White">
+        <StackPanel DockPanel.Dock="Top">
+            <TextBlock Text="字幕延迟统计" FontSize="22" FontWeight="SemiBold" />
+            <TextBlock Margin="0,8,0,0" TextWrapping="Wrap" Foreground="#555555"
+                       Text="仅保留本次运行中最近 512 条阶段记录，不保存音频或字幕内容。关闭程序即清除；需要留档时可导出 JSON。" />
+            <TextBlock Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#555555"
+                       Text="语音结束时间来自分段器估计，可能受背景音乐影响。界面耗时止于字幕控件更新，不代表显示器实际呈现。离线输入缺少采集时钟时，端到端指标不计入。" />
+            <TextBlock x:Name="CountText" Margin="0,12,0,4" TextWrapping="Wrap" />
+            <TextBlock x:Name="OutcomeText" Margin="0,0,0,10" TextWrapping="Wrap" Foreground="#555555" />
+        </StackPanel>
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <TextBlock x:Name="MessageText" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="#555555" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="导出 JSON" Click="Export_Click" Margin="4" Padding="12,6" />
+                <Button Content="清空统计" Click="Clear_Click" Margin="4" Padding="12,6" />
+                <Button Content="关闭" Click="Close_Click" Margin="4" Padding="12,6" />
+            </StackPanel>
+        </DockPanel>
+        <DataGrid x:Name="MetricsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                  HeadersVisibility="Column" GridLinesVisibility="Horizontal" RowHeaderWidth="0"
+                  AlternatingRowBackground="#F5F7FA" SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="处理阶段" Binding="{Binding Label}" Width="*" MinWidth="260" />
+                <DataGridTextColumn Header="样本数" Binding="{Binding Count}" Width="70" />
+                <DataGridTextColumn Header="平均 ms" Binding="{Binding Mean}" Width="100" />
+                <DataGridTextColumn Header="P50 ms" Binding="{Binding P50}" Width="100" />
+                <DataGridTextColumn Header="P95 ms" Binding="{Binding P95}" Width="100" />
+                <DataGridTextColumn Header="最大 ms" Binding="{Binding Max}" Width="100" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

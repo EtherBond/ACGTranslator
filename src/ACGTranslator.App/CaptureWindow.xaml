@@ -1,0 +1,81 @@
+<Window x:Class="ACGTranslator.CaptureWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="游戏训练素材采集" Width="1240" Height="870" MinWidth="960" MinHeight="700"
+ WindowStartupLocation="CenterOwner" Closing="Window_Closing" Background="#F6F7F9" FontFamily="Microsoft YaHei UI" FontSize="13">
+ <Window.Resources>
+  <Style TargetType="Button"><Setter Property="Margin" Value="4"/><Setter Property="Padding" Value="10,6"/><Setter Property="MinHeight" Value="32"/></Style>
+  <Style TargetType="TextBox"><Setter Property="Padding" Value="6,4"/><Setter Property="MinHeight" Value="30"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+  <Style TargetType="ComboBox"><Setter Property="MinHeight" Value="32"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+ </Window.Resources>
+ <Grid Margin="16" Background="#F6F7F9">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel x:Name="SetupPanel">
+   <TextBlock Text="游戏训练素材采集" FontSize="22" FontWeight="SemiBold"/>
+   <TextBlock Text="先在游戏中显示日中双语台词并开启自动播放。仅截取前台游戏；录制的是所选输出设备上的全部声音。" Margin="0,6" TextWrapping="Wrap"/>
+   <WrapPanel>
+    <TextBlock Text="游戏名" VerticalAlignment="Center"/>
+    <TextBox x:Name="GameName" Text="TenShiSouZou" Width="170" Margin="8,4"/>
+    <ComboBox x:Name="WindowBox" Width="370" Margin="4" SelectionChanged="WindowBox_SelectionChanged"/>
+    <Button Content="刷新窗口" Click="RefreshWindows_Click"/>
+    <ComboBox x:Name="DeviceBox" Width="240" Margin="4"/>
+   </WrapPanel>
+   <WrapPanel>
+    <Button Content="① 框选日文" Tag="ja" Click="SelectRegion_Click"/>
+    <Button Content="② 框选中文" Tag="zh" Click="SelectRegion_Click"/>
+    <Button Content="框选角色名（可选）" Tag="speaker" Click="SelectRegion_Click"/>
+    <Button Content="不采集角色名" Click="ClearSpeaker_Click"/>
+    <Button Content="预览 OCR" Click="PreviewOcr_Click"/>
+    <Button Content="检查录音（5 秒）" Click="CheckAudio_Click"/>
+   </WrapPanel>
+   <TextBlock x:Name="AudioSignalText" Text="录音信号：请先让游戏播放声音，再检查录音；持续无信号会自动停止。" Margin="4" TextWrapping="Wrap"/>
+   <TextBlock x:Name="RegionStatus" Text="尚未框选字幕区域" Margin="4" TextWrapping="Wrap"/>
+  </StackPanel>
+  <WrapPanel Grid.Row="1" Margin="0,6">
+   <Button x:Name="StartCapture" Content="开始采集并返回游戏" Click="StartCapture_Click"/>
+   <Button x:Name="StopCapture" Content="停止并保存" IsEnabled="False" Click="StopCapture_Click"/>
+   <TextBlock Text="返回此窗口时画面采集暂停，录音继续；停止后自动生成整理包，无需逐条确认。" VerticalAlignment="Center" Margin="12,0"/>
+  </WrapPanel>
+  <WrapPanel Grid.Row="2" x:Name="SessionPanel" Margin="0,4">
+   <ComboBox x:Name="SessionsBox" Width="420" DisplayMemberPath="Label" SelectionChanged="SessionsBox_SelectionChanged"/>
+   <Button Content="刷新会话" Click="RefreshSessions_Click"/>
+   <Button Content="打开数据目录" Click="OpenFolder_Click"/>
+   <Button Content="删除本会话" Click="DeleteSession_Click"/>
+   <Button Content="生成整理包" Click="Export_Click"/>
+   <Button Content="复制整理请求" Click="CopyHandoff_Click"/>
+  </WrapPanel>
+  <Grid Grid.Row="3" x:Name="ReviewPanel">
+   <Grid.ColumnDefinitions><ColumnDefinition Width="1.1*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+   <DataGrid x:Name="EntriesGrid" IsReadOnly="True" AutoGenerateColumns="False" SelectionMode="Single" SelectionChanged="EntriesGrid_SelectionChanged" CanUserAddRows="False">
+    <DataGrid.Columns>
+     <DataGridTextColumn Header="历史标记" Binding="{Binding Review}" Width="70"/>
+     <DataGridTextColumn Header="开始秒" Binding="{Binding StartSeconds,StringFormat=F2}" Width="70"/>
+     <DataGridTextColumn Header="原始日文候选" Binding="{Binding Japanese}" Width="*" MinWidth="220"/>
+    </DataGrid.Columns>
+   </DataGrid>
+   <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+    <StackPanel>
+     <TextBlock Text="保存后交给助手整理" FontSize="18" FontWeight="SemiBold" Margin="0,4"/>
+     <TextBlock Text="录音、截图和全部候选都会保留。保存后在对话中说“整理最新采集”，由助手纠错、核对配音并导出训练数据。历史确认/排除标记不影响整理包收录。采集器不会自行调用聊天助手。" TextWrapping="Wrap" Margin="0,4,0,10"/>
+     <TextBlock x:Name="HandoffStatus" Text="尚未生成整理包" TextWrapping="Wrap" Margin="0,4,0,10" Foreground="#555555"/>
+     <Image x:Name="EvidenceImage" Height="150" Stretch="Uniform" Margin="0,0,0,8"/>
+     <Expander Header="高级：查看或手动编辑（可选）" IsExpanded="False"><StackPanel>
+     <TextBlock Text="日文原文（按实际配音修正）"/>
+     <TextBox x:Name="JapaneseText" TextChanged="ReviewTextChanged" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="65" MaxHeight="130" VerticalScrollBarVisibility="Auto" Margin="0,4,0,8"/>
+     <TextBlock Text="中文译文"/>
+     <TextBox x:Name="ChineseText" TextChanged="ReviewTextChanged" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="55" MaxHeight="120" VerticalScrollBarVisibility="Auto" Margin="0,4,0,8"/>
+     <WrapPanel><TextBlock Text="角色" VerticalAlignment="Center"/><TextBox x:Name="SpeakerText" TextChanged="ReviewTextChanged" Width="130" Margin="6"/>
+      <TextBlock Text="起止秒" VerticalAlignment="Center"/><TextBox x:Name="BeginText" TextChanged="ReviewTextChanged" Width="70" Margin="6"/><TextBox x:Name="EndText" TextChanged="ReviewTextChanged" Width="70" Margin="6"/></WrapPanel>
+     <TextBlock x:Name="EntryNote" TextWrapping="Wrap" Foreground="#9A4A00" Margin="0,6"/>
+     <WrapPanel>
+      <Button Content="播放此区间" Click="Play_Click"/><Button Content="停止播放" Click="StopPlay_Click"/>
+      <Button Content="保存修改" Click="SaveEntry_Click"/><Button Content="核验无误，确认" Click="Confirm_Click"/><Button Content="排除此条" Click="Exclude_Click"/>
+     </WrapPanel>
+     <TextBlock Text="确认表示已核对原文、音频边界和配对关系。修改已确认条目后需重新确认。切换条目前请保存编辑。" TextWrapping="Wrap" Foreground="#666666" Margin="0,8"/>
+     </StackPanel></Expander>
+    </StackPanel>
+   </ScrollViewer>
+  </Grid>
+  <TextBlock x:Name="CaptureStatus" Grid.Row="4" Text="就绪 · 数据存放于项目 data/game-captures" TextWrapping="Wrap" Margin="0,10,0,0"/>
+ </Grid>
+</Window>

@@ -41,6 +41,30 @@
         <TextBlock x:Name="SegmentLabel" Style="{StaticResource Label}" />
         <Slider x:Name="SegmentSlider" Minimum="2" Maximum="12" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="Slider_ValueChanged" AutomationProperties.Name="最长片段" />
 
+        <TextBlock Text="识别搜索宽度（自动校准可调整）" Style="{StaticResource Label}" />
+        <ComboBox x:Name="BeamBox" SelectedValuePath="Tag" Height="28">
+            <ComboBoxItem Content="设备默认" Tag="0" />
+            <ComboBoxItem Content="1（优先速度）" Tag="1" />
+            <ComboBoxItem Content="2" Tag="2" />
+            <ComboBoxItem Content="5（更多候选）" Tag="5" />
+        </ComboBox>
+
+        <CheckBox x:Name="PreserveAsrContextBox" Content="保留完整片段上下文（实验性，仍过滤无语音片段）" Margin="0,12,0,4" />
+        <CheckBox x:Name="SpeechSegmentationBox" Content="按语音分段（实验性，减少背景音乐干扰）" Margin="0,12,0,4" />
+        <CheckBox x:Name="AdaptiveAsrBox" Content="按需复核识别（实验性，优先降低延迟）" Margin="0,4" />
+        <TextBlock Text="实验功能需在更多录音上验证，可随时关闭恢复原流程。" Foreground="Gray" TextWrapping="Wrap" />
+        <TextBlock Text="识别计算精度" Style="{StaticResource Label}" />
+        <ComboBox x:Name="ComputeTypeBox" SelectedValuePath="Tag" Height="28">
+            <ComboBoxItem Content="设备默认" Tag="default" />
+            <ComboBoxItem Content="FP16（显卡）" Tag="float16" />
+            <ComboBoxItem Content="INT8 + FP16（显卡，节省显存）" Tag="int8_float16" />
+            <ComboBoxItem Content="INT8（CPU）" Tag="int8" />
+        </ComboBox>
+
+        <TextBlock Text="日语人物名与术语（可选，固定日语时生效）" Style="{StaticResource Label}" />
+        <TextBox x:Name="HotwordsBox" Height="46" MaxLength="256" TextWrapping="Wrap" AcceptsReturn="True" AutomationProperties.Name="日语人物名与术语" />
+        <TextBlock Text="填写少量专有名词，用空格分隔；切换作品时请更换或清空。" Foreground="Gray" TextWrapping="Wrap" />
+
         <CheckBox x:Name="TurnEnhancementBox" Content="快速接话增强（实验性，本地运行）" Margin="0,12,0,4" />
         <TextBlock Text="检测换人位置后分别识别和翻译；不保存声纹。短回应和重叠讲话可能无法区分。" TextWrapping="Wrap" Foreground="Gray" />
         <TextBlock x:Name="TurnModelLabel" TextWrapping="Wrap" Margin="0,4,0,0" Foreground="Gray" />
